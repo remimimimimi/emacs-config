@@ -349,6 +349,10 @@
   (mapc #'disable-theme custom-enabled-themes)
   (load-theme 'ef-dark :no-confirm))
 
+;; Trim unnecessary whitespace.
+(use-package ws-butler :ensure t
+  :hook prog-mode)
+
 (use-package hl-todo :ensure t :demand t
   :init
   (global-hl-todo-mode))
