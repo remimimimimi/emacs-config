@@ -299,15 +299,17 @@
      (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-     (typst "https://github.com/uben0/tree-sitter-typst")))
+     (typst "https://github.com/uben0/tree-sitter-typst")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")))
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
           (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
-          (python-mode . python-ts-mode)))
-  ;; Run to install languages
+          (python-mode . python-ts-mode)
+          (rustic-mode . rust-ts-mode)))
+  ;; ;; Run to install languages
   ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
   )
 
@@ -378,6 +380,10 @@
   :custom
   ;; (optional) If you want to ensure your typst tree sitter grammar version is greater than the minimum requirement
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)))
+
+(use-package rustic :ensure t :demand t
+  :config
+  (setq rustic-lsp-client 'eglot))
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
