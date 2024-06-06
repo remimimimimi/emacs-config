@@ -299,16 +299,14 @@
      (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-     (typst "https://github.com/uben0/tree-sitter-typst")
-     (rust "https://github.com/tree-sitter/tree-sitter-rust")))
+     (typst "https://github.com/uben0/tree-sitter-typst")))
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
           (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
-          (python-mode . python-ts-mode)
-          (rustic-mode . rust-ts-mode)))
+          (python-mode . python-ts-mode)))
   ;; ;; Run to install languages
   ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
   )
