@@ -370,6 +370,8 @@
 
 (use-package org-modern :ensure t :demand t
   :init
+  (setq org-hide-emphasis-markers t
+        org-pretty-entities t)
   (global-org-modern-mode))
 
 ;;; Language-specific packages
