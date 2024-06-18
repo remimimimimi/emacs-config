@@ -384,6 +384,8 @@
         org-pretty-entities t)
   (global-org-modern-mode))
 
+(use-package pdf-tools :ensure t :demand t)
+
 ;;; Language-specific packages
 (use-package nix-mode :ensure t :demand t)
 
