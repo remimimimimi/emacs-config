@@ -359,7 +359,7 @@
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
-  :hook prog-mode)
+  :hook (prog-mode typst-ts-mode))
 
 (use-package hl-todo :ensure t :demand t
   :init
