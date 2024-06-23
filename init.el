@@ -391,6 +391,7 @@
 
 (use-package typst-ts-mode
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")) :demand t
+  :hook (typst-ts-mode . electric-pair-mode)
   :init
   (setq typst-ts-mode-enable-raw-blocks-highlight t)
   :custom
