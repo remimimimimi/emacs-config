@@ -402,6 +402,10 @@
   :config
   (setq rustic-lsp-client 'eglot))
 
+(use-package lean4-mode
+  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
+  :hook (lean4-mode . electric-pair-mode))
+
 ;;; Custom functions
 (defun sudo-find-file (file-name)
   "Like find file, but opens the file as root."
