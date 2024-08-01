@@ -386,6 +386,10 @@
 
 (use-package pdf-tools :ensure t :demand t)
 
+(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el")) :demand t
+	:after eglot
+	:config	(eglot-booster-mode))
+
 ;;; Language-specific packages
 (use-package nix-mode :ensure t :demand t)
 
