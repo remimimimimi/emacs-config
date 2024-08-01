@@ -413,9 +413,11 @@
   :config
   (setq rustic-lsp-client 'eglot))
 
-(use-package lean4-mode
-  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
-  :hook (lean4-mode . electric-pair-mode))
+;; (use-package lean4-mode
+;;   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
+;;   :hook (lean4-mode . electric-pair-mode))
+
+(use-package racket-mode :ensure t :demand t)
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
