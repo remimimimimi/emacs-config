@@ -352,13 +352,15 @@
 (use-package tempel-collection :ensure t)
 
 ;; Lovely themes
-(use-package ef-themes :ensure t :demand t
-  :bind ("C-c t t" . ef-themes-toggle)
-  :init
-  (setq ef-themes-to-toggle '(ef-dark ef-light))
-  ;; Disable all other themes to avoid awkward blending:
-  (mapc #'disable-theme custom-enabled-themes)
-  (load-theme 'ef-dark :no-confirm))
+(use-package modus-themes :ensure t :demand t
+  :config
+  (load-theme 'modus-vivendi t))
+
+(use-package tao-theme :ensure t :demand t
+  ;; :config
+  ;; (fringe-mode 0)
+  ;; (load-theme 'tao-yin t)
+  )
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
