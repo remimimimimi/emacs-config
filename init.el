@@ -114,8 +114,10 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
-  (set-frame-font "JuliaMono 16" nil t)
+  (set-frame-font "JuliaMono 16" nil t))
 
+(use-package ansi-term :ensure nil
+  :config
   ;; Allow switching windows in ansi-term char mode
   (define-key term-raw-map (kbd "M-o") 'other-window))
 
