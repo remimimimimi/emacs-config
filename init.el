@@ -114,7 +114,7 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
-  (set-frame-font "Uiua386 16" nil t))
+  (set-frame-font "JuliaMono 16" nil t)
 
 (use-package multiple-cursors :ensure t :demand t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
