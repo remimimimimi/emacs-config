@@ -424,5 +424,9 @@
   (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
     (find-file tramp-file-name)))
 
+(when (executable-find "agda-mode")
+  (load-file (let ((coding-system-for-read 'utf-8))
+               (shell-command-to-string "agda-mode locate"))))
+
 ;; Install all uninstalled packages
 (elpaca-process-queues)
