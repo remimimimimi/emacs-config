@@ -116,6 +116,9 @@
   (setq confirm-kill-emacs #'y-or-n-p)
   (set-frame-font "JuliaMono 16" nil t)
 
+  ;; Allow switching windows in ansi-term char mode
+  (define-key term-raw-map (kbd "M-o") 'other-window))
+
 (use-package multiple-cursors :ensure t :demand t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
