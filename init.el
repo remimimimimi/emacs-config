@@ -395,6 +395,8 @@
 	:after eglot
 	:config	(eglot-booster-mode))
 
+(use-package command-log-mode :ensure t :demand t)
+
 ;;; Language-specific packages
 (use-package nix-mode :ensure t :demand t)
 
