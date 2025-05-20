@@ -47,7 +47,10 @@
          ("M-l" . downcase-dwim)
          ("M-u" . upcase-dwim)
          ("M-c" . capitalize-dwim)
-         ("C-h '" . describe-char))
+         ("C-h '" . describe-char)
+         ;; ("C-c C-j" . recompile)
+         ;; ("C-c C-;" . compile)
+         )
   :init
   ;; Configure backups. Put all of them in the separate directory.
   ;; Copied from the emacs wiki.
@@ -114,7 +117,7 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
-  (set-frame-font "JuliaMono 16" nil t))
+  (set-frame-font "JuliaMono 15" nil t))
 
 (use-package term :ensure nil
   :config
@@ -266,8 +269,8 @@
         xref-show-definitions-function #'consult-xref))
 (use-package embark :ensure t :demand t
   :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+  (;("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-act)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -353,6 +356,8 @@
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 (use-package tempel-collection :ensure t)
 
+
+
 ;; Lovely themes
 (use-package modus-themes :ensure t :demand t
   :config
@@ -385,26 +390,61 @@
         avy-background t
         avy-single-candidate-jump nil))
 
+(use-package eat
+  :ensure (:type git :host codeberg :repo "akib/emacs-eat"
+           :files ("*.el" ("term" "term/*.el") "*.texi"
+                   "*.ti" ("terminfo/e" "terminfo/e/*")
+                   ("terminfo/65" "terminfo/65/*")
+                   ("integration" "integration/*")
+                   (:exclude ".dir-locals.el" "*-tests.el")))
+  :demand t
+  :config
+  ;; For `eat-eshell-mode'.
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+
+  ;; For `eat-eshell-visual-command-mode'.
+  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
+
 (use-package org-modern :ensure t :demand t
   :init
   (setq org-hide-emphasis-markers t
         org-pretty-entities t)
   (global-org-modern-mode))
 
-(use-package pdf-tools :ensure t :demand t)
+(use-package pdf-tools :ensure t :demand t
+  :hook (pdf-view-mode . auto-revert-mode)
+  :config (pdf-tools-install))
+
+(use-package eglot
+  :after embark
+  :bind ("C-." . eglot-code-actions)
+  :config
+  (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
+  (keymap-set embark-identifier-map "r" #'eglot-rename)
+  (push 'embark--allow-edit
+      (alist-get 'eglot-rename embark-target-injection-hooks)))
 
 (use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el")) :demand t
-	:after eglot
-	:config	(eglot-booster-mode))
+  :after eglot
+  :config	(eglot-booster-mode))
 
 (use-package command-log-mode :ensure t :demand t)
 
+;; (use-package ekg :ensure t :demand t
+;;   :bind (([f11] . ekg-capture))
+;;   :config
+;;   (require 'ekg-auto-save)
+;;   (add-hook 'ekg-capture-mode-hook #'ekg-auto-save-mode)
+;;   (add-hook 'ekg-edit-mode-hook #'ekg-auto-save-mode))
+
 ;;; Language-specific packages
-(use-package nix-mode :ensure t :demand t)
+(use-package nix-mode :ensure t :demand t
+  :hook (nix-mode . electric-pair-mode))
 
 (use-package typst-ts-mode
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")) :demand t
-  :hook (typst-ts-mode . electric-pair-mode)
+  :hook ((typst-ts-mode . electric-pair-mode)
+         (typst-ts-mode . smerge-mode))
   :init
   (setq typst-ts-mode-enable-raw-blocks-highlight t)
   :custom
@@ -412,14 +452,34 @@
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)))
 
 (use-package rustic :ensure t :demand t
+  :hook (rustic-mode . electric-pair-mode)
   :config
-  (setq rustic-lsp-client 'eglot))
+  (setq rustic-lsp-client 'eglot
+        rustic-format-on-save t))
 
-;; (use-package lean4-mode
-;;   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
-;;   :hook (lean4-mode . electric-pair-mode))
+(use-package lean4-mode
+  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
+  :hook (lean4-mode . electric-pair-mode))
 
-(use-package racket-mode :ensure t :demand t)
+;; (use-package racket-mode :ensure t :demand t)
+
+;; (use-package geiser :ensure t :demand t)
+;; (use-package geiser-chez :ensure t :demand t)
+(use-package paredit :ensure t :demand t)
+
+;; (use-package macrostep :ensure t :demand t
+;;   :bind ("C-c e" . macrostep-expand))
+
+(use-package julia-snail
+  :ensure t
+  :custom
+  (julia-snail-terminal-type :eat)
+  :hook
+  (julia-mode . julia-snail-mode))
+
+(use-package glsl-mode
+  :ensure t
+  :demand t)
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
@@ -428,9 +488,21 @@
   (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
     (find-file tramp-file-name)))
 
-(when (executable-find "agda-mode")
-  (load-file (let ((coding-system-for-read 'utf-8))
-               (shell-command-to-string "agda-mode locate"))))
+(setq dabbrev-case-fold-search nil)
 
 ;; Install all uninstalled packages
 (elpaca-process-queues)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files nil)
+ '(warning-suppress-log-types '((undo discard-info)))
+ '(warning-suppress-types '((emacs))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
