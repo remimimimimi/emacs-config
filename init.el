@@ -135,6 +135,7 @@
   ;; If you want to disable this behavior for some functions
   ;; just add those in `mc/cmds-to-run-once'.
   (setq mc/always-run-for-all t))
+
 (use-package expand-region :ensure t :demand t
   :bind ("C-=" . er/expand-region))
 
@@ -144,6 +145,7 @@
 (use-package vertico :ensure t :demand t
   :init
   (vertico-mode))
+
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
@@ -158,6 +160,7 @@
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
+
 ;; Useful annotations for vertico
 (use-package marginalia :ensure t :demand t
   :init
@@ -178,6 +181,7 @@
   :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
   :init
   (global-corfu-mode))
+
 ;; Use Dabbrev with Corfu!
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
@@ -267,6 +271,7 @@
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
+
 (use-package embark :ensure t :demand t
   :bind
   (;("C-." . embark-act)         ;; pick some comfortable binding
@@ -399,6 +404,9 @@
                    (:exclude ".dir-locals.el" "*-tests.el")))
   :demand t
   :config
+  ;; I want to switch windows when command is running too...
+  (keymap-set eat-eshell-semi-char-mode-map "M-o" #'other-window)
+
   ;; For `eat-eshell-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
 
