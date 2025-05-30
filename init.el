@@ -1,11 +1,11 @@
 ;;; -*- lexical-binding: t; -*-
 
-(defvar elpaca-installer-version 0.7)
+(defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1
+                              :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
@@ -15,27 +15,27 @@
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
-    (when (< emacs-major-version 28) (require 'subr-x))
+    (when (<= emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                 ,@(when-let ((depth (plist-get order :depth)))
-                                                     (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                 ,(plist-get order :repo) ,repo))))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
             (progn (message "%s" (buffer-string)) (kill-buffer buffer))
           (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
     (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
+    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 (elpaca elpaca-use-package
@@ -48,6 +48,7 @@
          ("M-u" . upcase-dwim)
          ("M-c" . capitalize-dwim)
          ("C-h '" . describe-char)
+         ("C-c C-d" . duplicate-dwim)
          ;; ("C-c C-j" . recompile)
          ;; ("C-c C-;" . compile)
          )
@@ -117,14 +118,14 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
-  (set-frame-font "JuliaMono 15" nil t))
+  (set-frame-font "JuliaMono Nerd Font 11" nil t))
 
 (use-package term :ensure nil
   :config
   ;; Allow switching windows in ansi-term char mode
   (define-key term-raw-map (kbd "M-o") 'other-window))
 
-(use-package multiple-cursors :ensure t :demand t
+(use-package multiple-cursors :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -136,7 +137,7 @@
   ;; just add those in `mc/cmds-to-run-once'.
   (setq mc/always-run-for-all t))
 
-(use-package expand-region :ensure t :demand t
+(use-package expand-region :ensure t
   :bind ("C-=" . er/expand-region))
 
 ;;; Completions and other general must-have stuff.
@@ -230,7 +231,7 @@
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find) ;; Alternative: consult-fd
+         ("M-s d" . consult-fd) ;; Alternative: consult-find
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
@@ -301,7 +302,7 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Show more useful information in eldoc
-(use-package helpful :ensure t :demand t
+(use-package helpful :ensure t
   :bind (("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
          ("C-h k" . helpful-key)
@@ -335,7 +336,7 @@
   )
 
 ;;; More opinionated packages
-(use-package rainbow-delimiters :ensure t :demand t
+(use-package rainbow-delimiters :ensure t
   :hook prog-mode)
 
 ;; Snippets!
@@ -368,7 +369,7 @@
   :config
   (load-theme 'modus-vivendi t))
 
-(use-package tao-theme :ensure t :demand t
+(use-package tao-theme :ensure t
   ;; :config
   ;; (fringe-mode 0)
   ;; (load-theme 'tao-yin t)
@@ -378,22 +379,24 @@
 (use-package ws-butler :ensure t
   :hook (prog-mode typst-ts-mode))
 
-(use-package hl-todo :ensure t :demand t
+(use-package hl-todo :ensure t
   :init
   (global-hl-todo-mode))
 
 ;; Newer version of transient package required for magit.
 (use-package transient :ensure t)
 
-(use-package magit :ensure t :demand t)
+(use-package magit :ensure t)
 
-(use-package avy :ensure t :demand t
+(use-package avy :ensure t
   :bind ("M-j" . avy-goto-char-timer)
   :config
   (setq avy-all-windows t
         avy-all-windows-alt nil
         avy-background t
         avy-single-candidate-jump nil))
+
+(use-package unicode-math-input :ensure t)
 
 (use-package eat
   :ensure (:type git :host codeberg :repo "akib/emacs-eat"
@@ -402,7 +405,7 @@
                    ("terminfo/65" "terminfo/65/*")
                    ("integration" "integration/*")
                    (:exclude ".dir-locals.el" "*-tests.el")))
-  :demand t
+  ;; :demand t
   :config
   ;; I want to switch windows when command is running too...
   (keymap-set eat-eshell-semi-char-mode-map "M-o" #'other-window)
@@ -413,13 +416,13 @@
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
-(use-package org-modern :ensure t :demand t
+(use-package org-modern :ensure t
   :init
   (setq org-hide-emphasis-markers t
         org-pretty-entities t)
   (global-org-modern-mode))
 
-(use-package pdf-tools :ensure t :demand t
+(use-package pdf-tools :ensure t
   :hook (pdf-view-mode . auto-revert-mode)
   :config (pdf-tools-install))
 
@@ -432,11 +435,21 @@
   (push 'embark--allow-edit
       (alist-get 'eglot-rename embark-target-injection-hooks)))
 
-(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el")) :demand t
+(use-package flycheck :ensure t
+  :config
+  (define-key flycheck-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key flycheck-mode-map (kbd "M-p") 'flycheck-previous-error))
+
+(use-package flymake
+  :config
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+
+(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
   :after eglot
   :config	(eglot-booster-mode))
 
-(use-package command-log-mode :ensure t :demand t)
+(use-package command-log-mode :ensure t)
 
 ;; (use-package ekg :ensure t :demand t
 ;;   :bind (([f11] . ekg-capture))
@@ -446,11 +459,11 @@
 ;;   (add-hook 'ekg-edit-mode-hook #'ekg-auto-save-mode))
 
 ;;; Language-specific packages
-(use-package nix-mode :ensure t :demand t
+(use-package nix-mode :ensure t
   :hook (nix-mode . electric-pair-mode))
 
 (use-package typst-ts-mode
-  :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")) :demand t
+  :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el"))
   :hook ((typst-ts-mode . electric-pair-mode)
          (typst-ts-mode . smerge-mode))
   :init
@@ -466,14 +479,10 @@
         rustic-format-on-save t))
 
 (use-package lean4-mode
-  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data")) :demand t
+  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
   :hook (lean4-mode . electric-pair-mode))
 
-;; (use-package racket-mode :ensure t :demand t)
-
-;; (use-package geiser :ensure t :demand t)
-;; (use-package geiser-chez :ensure t :demand t)
-(use-package paredit :ensure t :demand t)
+(use-package paredit :ensure t)
 
 ;; (use-package macrostep :ensure t :demand t
 ;;   :bind ("C-c e" . macrostep-expand))
@@ -486,8 +495,7 @@
   (julia-mode . julia-snail-mode))
 
 (use-package glsl-mode
-  :ensure t
-  :demand t)
+  :ensure t)
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
