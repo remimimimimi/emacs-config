@@ -42,6 +42,10 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
+;; (define-dwim downcase
+;;   ((active-region-trigger . (lambda (start end) (downcase-region start end)))
+;;    (normal-state-trigger . (lambda () (downcase-word)))
+
 (use-package emacs :ensure nil
   :bind (("M-o" . other-window)
          ("M-l" . downcase-dwim)
@@ -416,10 +420,37 @@
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
+(use-package org
+  :defer
+  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+                :branch "dev")
+  :hook ((org-mode . turn-on-org-cdlatex)
+         (org-mode . turn-on-org-cdlatex))
+  :config
+  (setq org-src-fontify-natively t))
+
+(use-package auctex
+  :ensure t)
+
+(use-package cdlatex
+  :ensure t)
+
 (use-package org-modern :ensure t
+  :disabled
   :init
-  (setq org-hide-emphasis-markers t
-        org-pretty-entities t)
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
+
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities nil
+   org-agenda-tags-column 0
+   org-ellipsis "…")
   (global-org-modern-mode))
 
 (use-package pdf-tools :ensure t
