@@ -420,8 +420,11 @@
                 :branch "dev")
   :hook ((org-mode . turn-on-org-cdlatex)
          (org-mode . turn-on-org-cdlatex))
-  :config
-  (setq org-src-fontify-natively t))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
+  :custom ((org-src-fontify-natively t)
+           (org-log-done t)
+           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))))
 
 (use-package auctex
   :ensure t)
@@ -498,8 +501,8 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
     ("C-c n L" . denote-add-links)
     ("C-c n b" . denote-backlinks)
 
-    ("C-c n q c" . denote-query-contents-link) ; create link that triggers a grep
-    ("C-c n q f" . denote-query-filenames-link) ; create link that triggers a dired
+    ("C-c n y c" . denote-query-contents-link) ; create link that triggers a grep
+    ("C-c n y f" . denote-query-filenames-link) ; create link that triggers a dired
 
     ("C-c n r" . denote-rename-file-using-front-matter)
 
