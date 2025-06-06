@@ -421,7 +421,8 @@
   :hook ((org-mode . turn-on-org-cdlatex)
          (org-mode . turn-on-org-cdlatex))
   :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture))
+         ("C-c c" . org-capture)
+         ("C-c d" . org-deadline))
   :custom ((org-src-fontify-natively t)
            (org-log-done t)
            (org-agenda-files '("~/Documents/Agenda" "~/.notes"))))
@@ -545,6 +546,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
       (alist-get 'eglot-rename embark-target-injection-hooks)))
 
 (use-package flycheck :ensure t
+  :disabled
   :config
   (define-key flycheck-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key flycheck-mode-map (kbd "M-p") 'flycheck-previous-error))
@@ -576,6 +578,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package rustic :ensure t
   :hook (rustic-mode . electric-pair-mode)
+  :bind* (("C-c C-d" . duplicate-dwim)
+          :map rustic-mode-map
+          ("C-c d" . rust-dbg-wrap-or-unwrap))
   :config
   (setq rustic-lsp-client 'eglot
         rustic-format-on-save t))
