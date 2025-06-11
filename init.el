@@ -52,6 +52,7 @@
          ;; ("C-c C-j" . recompile)
          ;; ("C-c C-;" . compile)
          )
+  :hook (emacs-lisp-mode . electric-pair-mode)
   :init
   ;; Configure backups. Put all of them in the separate directory.
   ;; Copied from the emacs wiki.
@@ -590,7 +591,8 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
   :custom (lean4-keybinding-refresh-file-dependencies (kbd "C-c d")))
 
-(use-package paredit :ensure t)
+(use-package paredit :ensure t
+  :hook emacs-lisp-mode)
 
 (use-package macrostep :ensure t :demand t
   :bind ("C-c e" . macrostep-expand))
@@ -621,7 +623,6 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files nil)
  '(warning-suppress-log-types '((undo discard-info)))
  '(warning-suppress-types '((emacs))))
 (custom-set-faces
