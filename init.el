@@ -435,11 +435,10 @@
   :ensure t)
 
 (use-package org-modern :ensure t
-  :disabled
   :init
   (setq
    ;; Edit settings
-   org-auto-align-tags nil
+   org-auto-align-tags t
    org-tags-column 0
    org-catch-invisible-edits 'show-and-error
    org-special-ctrl-a/e t
@@ -447,7 +446,7 @@
 
    ;; Org styling, hide markup etc.
    org-hide-emphasis-markers t
-   org-pretty-entities nil
+   org-pretty-entities t
    org-agenda-tags-column 0
    org-ellipsis "…")
   (global-org-modern-mode))
