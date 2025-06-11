@@ -449,6 +449,7 @@
    org-pretty-entities t
    org-agenda-tags-column 0
    org-ellipsis "…")
+  ;; TODO: https://github.com/jdtsmith/org-modern-indent
   (global-org-modern-mode))
 
 (defun denote-quick (&optional arg)
