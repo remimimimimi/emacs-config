@@ -114,6 +114,9 @@
   (scroll-bar-mode -1)
   (blink-cursor-mode -1)
 
+  ;; Show column number
+  (column-number-mode 1)
+
   ;; Allow short answers
   (setopt use-short-answers t)
 
