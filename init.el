@@ -117,6 +117,9 @@
   ;; Allow short answers
   (setopt use-short-answers t)
 
+  ;; Save config file in register for easy access
+  (set-register ?c (cons 'file "~/.config/emacs/init.el"))
+
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
   (set-frame-font "JuliaMono Nerd Font 11" nil t))
@@ -364,9 +367,16 @@
 (use-package tempel-collection :ensure t)
 
 ;; Lovely themes
-(use-package modus-themes :ensure t :demand t
+(use-package ef-themes :ensure t :demand t
+  :bind ("C-c t t" . ef-themes-toggle)
   :config
-  (load-theme 'modus-vivendi t))
+  (setq ef-themes-to-toggle '(ef-dark ef-light))
+  (load-theme 'ef-dark t))
+
+(use-package modus-themes :ensure t :demand t
+  ;; :config
+  ;; (load-theme 'modus-vivendi t)
+  )
 
 (use-package tao-theme :ensure t
   ;; :config
@@ -606,11 +616,13 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 (use-package glsl-mode
   :ensure t)
 
-(use-package proof-general
-  :ensure t
-  :config
-  (push '(narya "Narya" "ny" nil (".nyo")) proof-assistant-table)
-  (push 'narya proof-general-configured-provers))
+;; (use-package proof-general
+;;   :ensure t
+;;   :demand t
+;;   :config
+;;   ;; (push '(narya "Narya" "ny" nil (".nyo")) proof-assistant-table)
+;;   (push 'narya proof-general-configured-provers)
+;;   (require 'narya))
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
