@@ -1,0 +1,24 @@
+;; -*- mode: lisp-data; -*-
+
+org-mode
+
+(name
+ "#+attr_latex: :options [" p "]" n> r)
+
+(ma
+ "\\( " r " \\)")
+
+(mab
+ "\\[" n> r> n "\\]")
+
+;; (thm
+;;  "#+attr_latex: :options [" (s name) "]" n>
+;;  "#+begin_theorem" n> ()
+;;  r> n
+;;  "#+end_theorem")
+
+;; (thml
+;;  "#+attr_latex: :options [" (s name) "]" n>
+;;  "#+begin_theorem" n> ()
+;;  p> n
+;;  "#+end_theorem")

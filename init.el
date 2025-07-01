@@ -48,7 +48,7 @@
          ("M-u" . upcase-dwim)
          ("M-c" . capitalize-dwim)
          ("C-h '" . describe-char)
-         ("C-c C-d" . duplicate-dwim)
+         ("C-c d" . duplicate-dwim)
          ;; ("C-c C-j" . recompile)
          ;; ("C-c C-;" . compile)
          )
@@ -121,7 +121,10 @@
   (setopt use-short-answers t)
 
   ;; Save config file in register for easy access
-  (set-register ?c (cons 'file "~/.config/emacs/init.el"))
+  (set-register ?c (cons 'file "~/Projects/Mine/emacs-config/init.el"))
+
+  ;; Yaml
+  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
@@ -320,7 +323,7 @@
   :config
   (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     ;; (css "https://github.com/tree-sitter/tree-sitter-css")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
      ;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
      ;; (html "https://github.com/tree-sitter/tree-sitter-html")
      ;; (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
@@ -373,8 +376,8 @@
 (use-package ef-themes :ensure t :demand t
   :bind ("C-c t t" . ef-themes-toggle)
   :config
-  (setq ef-themes-to-toggle '(ef-dark ef-light))
-  (load-theme 'ef-dark t))
+  (setq ef-themes-to-toggle '(ef-light ef-dark))
+  (load-theme 'ef-light t))
 
 (use-package modus-themes :ensure t :demand t
   ;; :config
@@ -406,7 +409,8 @@
   (setq avy-all-windows t
         avy-all-windows-alt nil
         avy-background t
-        avy-single-candidate-jump nil))
+        avy-single-candidate-jump nil
+        avy-timeout-seconds 0.25))
 
 (use-package unicode-math-input :ensure t)
 
@@ -432,14 +436,15 @@
   :defer
   :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
                 :branch "dev")
-  :hook ((org-mode . turn-on-org-cdlatex)
-         (org-mode . turn-on-org-cdlatex))
+  :hook (turn-on-org-cdlatex tempel-abbrev-mode org-latex-preview-auto-mode)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c d" . org-deadline))
   :custom ((org-src-fontify-natively t)
+           (org-pretty-entities nil)
            (org-log-done t)
-           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))))
+           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
+           (cdlatex-math-symbol-prefix 59)))
 
 (use-package auctex
   :ensure t)
@@ -464,6 +469,93 @@
    org-ellipsis "…")
   ;; TODO: https://github.com/jdtsmith/org-modern-indent
   (global-org-modern-mode))
+
+;; (defmacro deftheoremlink (name prefix)
+;;   "Define org link type with PREFIX for theorem type NAME"
+;;   )
+
+;; (defmacro deftheorem (name display-name prefix)
+;;   "Defines a new theorem type called NAME (rendered as DISPLAY-NAME in HTML) which labels start with PREFIX. If TCB is not nil, in LaTeX the tcbtheorem syntax is used.
+;; Usage:
+
+;; #+BEGIN_name Title :label lbl
+;; ...
+;; #+END_name
+;; As can be seen in [[prefix:lbl]]"
+;;   )
+
+(completing-read)
+
+(use-package org-special-block-extras :ensure t
+  :disabled
+  :hook (org-mode . org-special-block-extras-mode)
+  :config
+  (org-defblock theorem (name nil label nil) [:face 'org-link]
+                "Define new theorem with human-readable NAME."
+                (unless (equal backend 'latex)
+                  (error "Theorem block does not support this backend."))
+                (format "\\begin{theorem}%s\n%s%s\n\\end{theorem}"
+                        (or (and name (format "[%s]" name))
+                            "")
+                        (or (and label (format "\\label{%s}\n" label))
+                            "")
+                        contents))
+  (org-deflink theorem
+               (format "\\ref{%s}" o-label))
+
+  ;; (defmacro special-block-labels-push (name label)
+  ;;   (let ((labels (format "special-block-%s-labels" name))
+  ;;         (labels-cdr (format "special-block-%s-labels-cdr" name)))
+  ;;     `(let ((label (list (format "%s" ,label))))
+  ;;        (setq ,(intern labels-cdr)
+  ;;              (if ,(intern labels-cdr)
+  ;;                  (setcdr ,(intern labels-cdr) label)
+  ;;                (setq ,(intern labels) label))))))
+
+  ;; (defmacro defspeciallink (name prefix)
+  ;;   `(progn
+  ;;      (defvar ,(intern (format "special-block-%s-labels" name)) '()) ; to store this theroem labels
+  ;;      (defvar ,(intern (format "special-block-%s-labels-cdr" name)) nil)
+
+  ;;      (defblock ,prefix (ref nil) ()
+  ;;                ,(format "Reference a %s special block." name)
+  ;;                (format
+  ;;                 (cond
+  ;;                  ((org-export-derived-backend-p org-export-current-backend 'latex)
+  ;;                   ,(format "\\ref{%s:%%s}" prefix)) ; use standard ref in LateX
+  ;;                  ((org-export-derived-backend-p org-export-current-backend 'html)
+  ;;                   ,(format "<a href=\"#%s:%%s\">%%d</a>" prefix))) ; in HTML the number has to be print manually, finding the position of the label in the list
+  ;;                 ref (1+ (cl-position (format "%s" ref) ,(intern (format "special-block-%s-labels" name)) :test 'equal))))))
+                                        ; sum one because lists are zero based
+
+  ;; (defmacro deftheorem (name display-name prefix &optional tcb)
+;;     "Defines a new theorem type called NAME (rendered as DISPLAY-NAME in HTML) which labels start with PREFIX. If TCB is not nil, in LaTeX the tcbtheorem syntax is used.
+;; Usage:
+;; ,#+BEGIN_name Title :label lbl
+;; ....
+;; ,#+END_name
+;; As can be seen in [[prefix:lbl]]
+;;                 "
+;;     `(progn
+;;        (defspeciallink ,name ,prefix)
+
+;;        (defblock ,name (title nil) (label nil unnumbered nil)
+;;                  ,(format "Define %s special block." name)
+;;                  (unless unnumbered (special-block-labels-push ,name label)) ; add label to list
+;;                  (format
+;;                   (cond
+;;                    ((org-export-derived-backend-p org-export-current-backend 'latex)
+;;                     (concat ,(format "\\begin{%s" name) (when unnumbered "*") "}"
+;;                             ,(if tcb "{%s}{%s}" (format "[%%s]\\label{%s:%%s}" prefix)) ; tcbtheorem or standard
+;;                             "\n%s"
+;;                             ,(format "\\end{%s" name) (when unnumbered "*") "}"))
+;;                    ((org-export-derived-backend-p org-export-current-backend 'html)
+;;                     (concat ,(format "<p class=\"admonition-title %s\">%s" name display-name)
+;;                             (unless unnumbered (format " %d" (length ,(intern (format "special-block-%s-labels" name)))))
+;;                             (when title ": ") "%s</p>"
+;;                             ,(format "<div id=\"%s:%%s\" class=\"special-block %s\">%%s</div>" prefix name))))
+;;                   (or title "") (or label "") contents))))
+  )
 
 (defun denote-quick (&optional arg)
   "Wrapper around `denote' that changes prompts based on prefix ARG.
@@ -546,6 +638,10 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
   (denote-rename-buffer-mode 1))
 
+(use-package nov :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+
 (use-package pdf-tools :ensure t
   :hook (pdf-view-mode . auto-revert-mode)
   :config (pdf-tools-install))
@@ -590,14 +686,24 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   ;; (optional) If you want to ensure your typst tree sitter grammar version is greater than the minimum requirement
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)))
 
-(use-package rustic :ensure t
-  :hook (rustic-mode . electric-pair-mode)
-  :bind* (("C-c C-d" . duplicate-dwim)
-          :map rustic-mode-map
-          ("C-c d" . rust-dbg-wrap-or-unwrap))
+(use-package rust-mode :ensure t
+  :hook (rust-mode . electric-pair-mode)
+  :init
+  ;; (setq rust-mode-treesitter-derive t)
+  (setq rust-load-optional-libraries t)
+  (add-hook 'rust-mode-hook 'eglot-ensure) ; TODO: Rewrite using `use-package'
   :config
-  (setq rustic-lsp-client 'eglot
-        rustic-format-on-save t))
+  (setq rust-format-on-save t))
+
+(use-package cargo-mode :ensure t
+  :hook
+  (rust-mode . cargo-minor-mode)
+  :config
+  (setq compilation-scroll-output t)
+  (define-key cargo-minor-mode-map (kbd "C-c C-c") 'cargo-mode-command-map))
+
+(use-package pu-mode
+  :ensure (:type git :host github :repo "remimimimimi/pu.el" :branch "main" :files ("pu-mode.el")))
 
 (use-package lean4-mode
   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
@@ -617,6 +723,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (julia-mode . julia-snail-mode))
 
 (use-package glsl-mode
+  :ensure t)
+
+(use-package racket-mode
   :ensure t)
 
 ;; (use-package proof-general
