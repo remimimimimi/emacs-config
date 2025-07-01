@@ -433,24 +433,42 @@
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (use-package org
+  :after cdlatex
   :defer
   :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
                 :branch "dev")
-  :hook (turn-on-org-cdlatex tempel-abbrev-mode org-latex-preview-auto-mode)
+  :hook ((org-mode . org-cdlatex-mode)
+         (org-mode . abbrev-mode)
+         (org-mode . tempel-abbrev-mode)
+         (org-mode . org-latex-preview-auto-mode))
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c d" . org-deadline))
-  :custom ((org-src-fontify-natively t)
+         ("C-c d" . org-deadline)
+         :map org-cdlatex-mode-map
+         (";" . cdlatex-math-symbol))
+  :custom ((org-src-fontify-natively nil)
            (org-pretty-entities nil)
            (org-log-done t)
            (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
-           (cdlatex-math-symbol-prefix 59)))
+           (org-latex-preview-live '(block inline edit-special)))
+  :init
+  (setq cdlatex-math-symbol-prefix 59)
+  (setq cdlatex-math-symbol-alist
+        '((?u ("\\upsilon" "\\cup"))
+          (?t ("\\tau"     "\\cap" "\\tan")))))
 
 (use-package auctex
   :ensure t)
 
 (use-package cdlatex
-  :ensure t)
+  :ensure t
+  :custom ((cdlatex-math-symbol-prefix 59))
+  :bind (:map cdlatex-mode-map
+         (";" . cdlatex-math-symbol))
+  :config
+  (setq cdlatex-math-symbol-alist
+        '((?u ("\\upsilon" "\\cup"))
+          (?t ("\\tau"     "\\cap" "\\tan")))))
 
 (use-package org-modern :ensure t
   :init
@@ -483,8 +501,6 @@
 ;; #+END_name
 ;; As can be seen in [[prefix:lbl]]"
 ;;   )
-
-(completing-read)
 
 (use-package org-special-block-extras :ensure t
   :disabled
