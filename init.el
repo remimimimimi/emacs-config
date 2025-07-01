@@ -433,7 +433,7 @@
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (use-package org
-  :after cdlatex
+  :after (cdlatex tempel)
   :defer
   :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
                 :branch "dev")
