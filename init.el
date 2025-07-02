@@ -488,7 +488,7 @@
          ("`" . nil)
          ("'" . nil))
   :custom ((org-log-done t)
-           (org-pretty-entities t)
+           ;; (org-pretty-entities t)
            (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
            (org-latex-preview-live '(block inline edit-special))))
 
