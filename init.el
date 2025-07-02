@@ -143,12 +143,16 @@
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click))
-  :config
-  ;; Don't ask to allow running command on all cursors.
-  ;; If you want to disable this behavior for some functions
-  ;; just add those in `mc/cmds-to-run-once'.
-  (setq mc/always-run-for-all t))
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+
+;; (use-package macrursors :ensure (:type git :host github :repo "corytertel/macrursors" :branch "main" :files ("*.el"))
+;;   :bind (("C-c SPC" . macrursors-select)
+;;          ("C->" . macrursors-mark-next-instance-of)
+;;          ("C-<" . macrursors-mark-previous-instance-of))
+;;   :config
+;;   (dolist (mode '(corfu-mode))
+;;     (add-hook 'macrursors-pre-finish-hook mode)
+;;     (add-hook 'macrursors-post-finish-hook mode)))
 
 (use-package expand-region :ensure t
   :bind ("C-=" . er/expand-region))
@@ -353,7 +357,7 @@
   :hook prog-mode)
 
 ;; Snippets!
-(use-package tempel
+(use-package tempel :ensure t
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert))
   :init
@@ -435,35 +439,23 @@
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
-(use-package org
-  :after (cdlatex tempel)
-  :defer
-  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
-                :branch "dev")
-  :hook ((org-mode . org-cdlatex-mode)
-         (org-mode . abbrev-mode)
-         (org-mode . tempel-abbrev-mode)
-         (org-mode . org-latex-preview-auto-mode))
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c d" . org-deadline)
-         :map org-cdlatex-mode-map
-         (";" . cdlatex-math-symbol))
-  :custom ((org-src-fontify-natively nil)
-           (org-pretty-entities nil)
-           (org-log-done t)
-           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
-           (org-latex-preview-live '(block inline edit-special)))
-  :init
-  (setq cdlatex-math-symbol-prefix 59)
-  (setq cdlatex-math-symbol-alist
-        '((?u ("\\upsilon" "\\cup"))
-          (?U ("\\Upsilon" "\\bigcup"))
-          (?t ("\\tau"     "\\cap"))
-          (?T (""          "\\bigcap"))
-          (?. ("\\cdot"    "\\dots"))
-          (?{ ("\\subseteq"))
-          (?} ("\\supseteq")))))
+(use-package laas :ensure t :demand t
+  :hook LaTeX-mode
+  :custom (laas-enable-auto-space nil)
+  :config ; do whatever here
+  (aas-set-snippets 'laas-mode
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "sub" "\subset"
+                    "seq" "\subseteq"
+                    "int" "\\cap"
+                    "bint" "\\bigcap"
+                    "un" "\\cup"
+                    "bun" "\\bigcup"
+                    ;; add accent snippets
+                    :cond #'laas-object-on-left-condition
+                    "bb"  (lambda () (interactive) (laas-wrap-previous-object "mathbb"))
+                    "cal" (lambda () (interactive) (laas-wrap-previous-object "mathcal"))))
 
 (use-package auctex
   :ensure t)
@@ -473,12 +465,32 @@
   :custom ((cdlatex-math-symbol-prefix 59))
   :bind (:map cdlatex-mode-map
          (";" . cdlatex-math-symbol))
-  ;; :config
-  ;; (setq cdlatex-math-symbol-alist
-  ;;       '((?u ("\\upsilon" "\\cup" "\\bigcup"))
-  ;;         (?t ("\\tau"     "\\cap" "\\bigcap"))
-  ;;         (?. ("\\cdot"    "\\dots"))))
-  )
+  :config
+  (setq cdlatex-math-symbol-alist
+        '((?u ("\\upsilon" "\\cup" "\\bigcup"))
+          (?t ("\\tau"     "\\cap" "\\bigcap"))
+          (?. ("\\cdot"    "\\dots")))))
+
+(use-package org
+  :after (tempel laas)
+  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+                :branch "dev")
+  :hook ((org-mode . org-cdlatex-mode)
+         (org-mode . laas-mode)
+         (org-mode . abbrev-mode)
+         (org-mode . tempel-abbrev-mode)
+         (org-mode . org-latex-preview-auto-mode))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c d" . org-deadline)
+         ;; We will use laas-mode
+         :map org-cdlatex-mode-map
+         ("`" . nil)
+         ("'" . nil))
+  :custom ((org-log-done t)
+           (org-pretty-entities t)
+           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
+           (org-latex-preview-live '(block inline edit-special))))
 
 (use-package org-modern :ensure t
   :init
@@ -492,7 +504,6 @@
 
    ;; Org styling, hide markup etc.
    org-hide-emphasis-markers t
-   org-pretty-entities t
    org-agenda-tags-column 0
    org-ellipsis "…")
   ;; TODO: https://github.com/jdtsmith/org-modern-indent
