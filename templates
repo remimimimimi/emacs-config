@@ -17,6 +17,12 @@ org-mode
 (lra
  "\\left\\langle " r " \\right\\rangle")
 
+(lrc
+ "\\left\\{ " r " \\right\\}")
+
+(set
+ "\\left\\{ " r " \\right\\}")
+
 (mab
  "\\[" n> r> n "\\]")
 
