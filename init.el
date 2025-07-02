@@ -446,8 +446,8 @@
   (aas-set-snippets 'laas-mode
                     ;; set condition!
                     :cond #'texmathp ; expand only while in math
-                    "sub" "\subset"
-                    "seq" "\subseteq"
+                    "sub" "\\subset"
+                    "seq" "\\subseteq"
                     "int" "\\cap"
                     "bint" "\\bigcap"
                     "un" "\\cup"
