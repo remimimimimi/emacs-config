@@ -128,7 +128,10 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
-  (set-frame-font "JuliaMono Nerd Font 11" nil t))
+  (set-frame-font "JuliaMono Nerd Font 11" nil t)
+
+  ;; View mode by default for read-only files
+  (setq view-read-only t))
 
 (use-package term :ensure nil
   :config
@@ -455,7 +458,12 @@
   (setq cdlatex-math-symbol-prefix 59)
   (setq cdlatex-math-symbol-alist
         '((?u ("\\upsilon" "\\cup"))
-          (?t ("\\tau"     "\\cap" "\\tan")))))
+          (?U ("\\Upsilon" "\\bigcup"))
+          (?t ("\\tau"     "\\cap"))
+          (?T (""          "\\bigcap"))
+          (?. ("\\cdot"    "\\dots"))
+          (?{ ("\\subseteq"))
+          (?} ("\\supseteq")))))
 
 (use-package auctex
   :ensure t)
@@ -465,10 +473,12 @@
   :custom ((cdlatex-math-symbol-prefix 59))
   :bind (:map cdlatex-mode-map
          (";" . cdlatex-math-symbol))
-  :config
-  (setq cdlatex-math-symbol-alist
-        '((?u ("\\upsilon" "\\cup"))
-          (?t ("\\tau"     "\\cap" "\\tan")))))
+  ;; :config
+  ;; (setq cdlatex-math-symbol-alist
+  ;;       '((?u ("\\upsilon" "\\cup" "\\bigcup"))
+  ;;         (?t ("\\tau"     "\\cap" "\\bigcap"))
+  ;;         (?. ("\\cdot"    "\\dots"))))
+  )
 
 (use-package org-modern :ensure t
   :init
