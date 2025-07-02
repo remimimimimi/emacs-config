@@ -24,7 +24,7 @@ org-mode
  "\\left\\{ " r " \\right\\}")
 
 (mab
- "\\[" r "\\]")
+ "\\[ " r " \\]")
 
 ;; (thm
 ;;  "#+attr_latex: :options [" (s name) "]" n>
