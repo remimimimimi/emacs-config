@@ -8,6 +8,15 @@ org-mode
 (ma
  "\\( " r " \\)")
 
+(lrp
+ "\\left( " r " \\right)")
+
+(lrb
+ "\\left[ " r " \\right]")
+
+(lra
+ "\\left\\langle " r " \\right\\rangle")
+
 (mab
  "\\[" n> r> n "\\]")
 
