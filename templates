@@ -20,7 +20,7 @@ org-mode
 (lrc
  "\\left\\{ " r " \\right\\}")
 
-(set
+(st
  "\\left\\{ " r " \\right\\}")
 
 (mab
