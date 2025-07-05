@@ -160,7 +160,7 @@
 ;;; Completions and other general must-have stuff.
 
 ;; Better completion for M-x
-(use-package vertico :ensure t :demand t
+(use-package vertico :ensure t
   :init
   (vertico-mode))
 
@@ -170,7 +170,7 @@
   (savehist-mode))
 
 ;; Fuzzy search for vertico
-(use-package orderless :ensure t :demand t
+(use-package orderless :ensure t
   :init
   ;; Configure a custom style dispatcher (see the Consult wiki)
   ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
@@ -180,7 +180,7 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 ;; Useful annotations for vertico
-(use-package marginalia :ensure t :demand t
+(use-package marginalia :ensure t
   :init
   (marginalia-mode))
 
@@ -195,7 +195,7 @@
 
 ;; General in-place auto completion
 ;; If you want more context-related completions consider `cape' package
-(use-package corfu :ensure t :demand t
+(use-package corfu :ensure t
   :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
   :init
   (global-corfu-mode))
@@ -213,7 +213,7 @@
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
 
 ;; Example configuration for Consult
-(use-package consult :ensure t :demand t
+(use-package consult :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -290,7 +290,7 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
 
-(use-package embark :ensure t :demand t
+(use-package embark :ensure t
   :bind
   (;("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-act)        ;; good alternative: M-.
@@ -314,7 +314,7 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
-(use-package embark-consult :ensure t :demand t
+(use-package embark-consult :ensure t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
@@ -386,7 +386,7 @@
   (setq ef-themes-to-toggle '(ef-light ef-dark))
   (load-theme 'ef-light t))
 
-(use-package modus-themes :ensure t :demand t
+(use-package modus-themes :ensure t :disabled
   ;; :config
   ;; (load-theme 'modus-vivendi t)
   )
@@ -439,7 +439,7 @@
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
-(use-package laas :ensure t :demand t
+(use-package laas :ensure t
   :hook LaTeX-mode
   :custom (laas-enable-auto-space nil)
   :config ; do whatever here
@@ -529,7 +529,7 @@
 
 (use-package jinx :ensure t
   :after embark
-  :hook (emacs-startup . global-jinx-mode)
+  ;; :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages))
   :config
@@ -538,7 +538,8 @@
   (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
   (add-to-list 'embark-repeat-actions #'jinx-next)
   (add-to-list 'embark-repeat-actions #'jinx-previous)
-  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
+  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target))
+  (global-jinx-mode))
 
 ;; (defmacro deftheoremlink (name prefix)
 ;;   "Define org link type with PREFIX for theorem type NAME"
@@ -710,7 +711,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :init
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
-(use-package pdf-tools :ensure t
+(use-package pdf-tools :ensure t :demand t
   :hook (pdf-view-mode . auto-revert-mode)
   :config (pdf-tools-install))
 
@@ -815,16 +816,3 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 ;; Install all uninstalled packages
 (elpaca-process-queues)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(warning-suppress-log-types '((undo discard-info)))
- '(warning-suppress-types '((emacs))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
