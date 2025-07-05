@@ -8,6 +8,37 @@ org-mode
 (ma
  "\\( " r " \\)")
 
+(mab
+ "\\[ " r " \\]")
+
+(def
+ "#+begin_definition" n>
+ r> n
+ "#+end_definition")
+
+(prp
+ "#+begin_proposition" n>
+ r> n
+ "#+end_proposition")
+
+(prf
+ "#+begin_proof" n>
+ r> n
+ "#+end_proof")
+
+(exm
+ "#+begin_exmpl" n>
+ r> n
+ "#+end_exmpl")
+
+(thm
+ "#+begin_theorem" n>
+ r> n
+ "#+end_theorem")
+
+org-mode :when (or (org-inside-LaTeX-fragment-p)
+                   (eq (org-element-type (org-element-at-point)) 'latex-environment))
+
 (lrp
  "\\left( " r " \\right)")
 
@@ -23,8 +54,15 @@ org-mode
 (st
  "\\left\\{ " r " \\right\\}")
 
-(mab
- "\\[ " r " \\]")
+(abs
+ "\\left| " r " \\right|")
+
+(norm
+ "\\left\\lVert " r " \\right\\rVert")
+
+(sst
+ "\\left\\{ " p " \\middle| " p " \\right\\}")
+
 
 ;; (thm
 ;;  "#+attr_latex: :options [" (s name) "]" n>

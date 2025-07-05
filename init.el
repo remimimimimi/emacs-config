@@ -452,10 +452,14 @@
                     "bint" "\\bigcap"
                     "un" "\\cup"
                     "bun" "\\bigcup"
+                    "pr" '(tempel "\\left( " r " \\right)")
+                    "bk" '(tempel "\\left[ " r " \\right]")
+                    "sm" '(tempel "\\sum" r)
                     ;; add accent snippets
                     :cond #'laas-object-on-left-condition
                     "bb"  (lambda () (interactive) (laas-wrap-previous-object "mathbb"))
-                    "cal" (lambda () (interactive) (laas-wrap-previous-object "mathcal"))))
+                    "cal" (lambda () (interactive) (laas-wrap-previous-object "mathcal"))
+                    "'t" (lambda () (interactive) (laas-wrap-previous-object "text"))))
 
 (use-package auctex
   :ensure t)
@@ -479,7 +483,8 @@
          (org-mode . laas-mode)
          (org-mode . abbrev-mode)
          (org-mode . tempel-abbrev-mode)
-         (org-mode . org-latex-preview-auto-mode))
+         (org-mode . org-latex-preview-auto-mode)
+         (org-mode . visual-line-mode))
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c d" . org-deadline)
@@ -490,7 +495,20 @@
   :custom ((org-log-done t)
            ;; (org-pretty-entities t)
            (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
-           (org-latex-preview-live '(block inline edit-special))))
+           (org-latex-preview-live '(block inline edit-special))
+           (org-highlight-latex-and-related '(latex script entities))
+           ;; (org-latex-preview-preamble "\\documentclass{article}
+;; [DEFAULT-PACKAGES]
+;; [PACKAGES]
+;; \\usepackage{xcolor}
+;; \\usepackage{amsmath}
+;; \\DeclareMathOperator{\\diam}{diam}")
+           )
+  :config
+  (add-hook 'org-mode-hook (lambda ()
+    (setq-local electric-pair-inhibit-predicate
+      `(lambda (c)
+         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package org-modern :ensure t
   :init
@@ -508,6 +526,19 @@
    org-ellipsis "…")
   ;; TODO: https://github.com/jdtsmith/org-modern-indent
   (global-org-modern-mode))
+
+(use-package jinx :ensure t
+  :after embark
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages))
+  :config
+  (embark-define-overlay-target jinx category (eq %p 'jinx-overlay))
+  (add-to-list 'embark-target-finders 'embark-target-jinx-at-point)
+  (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
+  (add-to-list 'embark-repeat-actions #'jinx-next)
+  (add-to-list 'embark-repeat-actions #'jinx-previous)
+  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
 
 ;; (defmacro deftheoremlink (name prefix)
 ;;   "Define org link type with PREFIX for theorem type NAME"
