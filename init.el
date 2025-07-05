@@ -500,7 +500,9 @@
          ;; We will use laas-mode
          :map org-cdlatex-mode-map
          ("`" . nil)
-         ("'" . nil))
+         ("'" . nil)
+         :map org-mode-map
+         ("C-c C-;" . org-store-link))
   :custom ((org-log-done t)
            ;; (org-pretty-entities t)
            (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
