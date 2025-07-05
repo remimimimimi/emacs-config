@@ -132,7 +132,11 @@
 
   ;; Ask confirmation on emacs exit
   (setq confirm-kill-emacs #'y-or-n-p)
+
+  ;; Set fonts
   (set-frame-font "JuliaMono Nerd Font 11" nil t)
+  ;; Took that from https://www.1001fonts.com/cmu-font.html
+  (set-face-attribute 'variable-pitch nil :family "CMU Serif" :height 180 :weight 'thin)
 
   ;; View mode by default for read-only files
   (setq view-read-only t))
@@ -488,7 +492,8 @@
   :hook ((org-mode . org-cdlatex-mode)
          (org-mode . tempel-abbrev-mode)
          (org-mode . org-latex-preview-auto-mode)
-         (org-mode . visual-line-mode))
+         (org-mode . visual-line-mode)
+         (org-mode . variable-pitch-mode))
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c d" . org-deadline)
@@ -531,6 +536,9 @@
   ;; TODO: https://github.com/jdtsmith/org-modern-indent
   (global-org-modern-mode))
 
+(use-package vundo :ensure t
+  :bind ("C-z v" . vundo))
+
 (use-package jinx :ensure t
   :after embark
   :hook (org-mode)
@@ -543,91 +551,6 @@
   (add-to-list 'embark-repeat-actions #'jinx-next)
   (add-to-list 'embark-repeat-actions #'jinx-previous)
   (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
-
-;; (defmacro deftheoremlink (name prefix)
-;;   "Define org link type with PREFIX for theorem type NAME"
-;;   )
-
-;; (defmacro deftheorem (name display-name prefix)
-;;   "Defines a new theorem type called NAME (rendered as DISPLAY-NAME in HTML) which labels start with PREFIX. If TCB is not nil, in LaTeX the tcbtheorem syntax is used.
-;; Usage:
-
-;; #+BEGIN_name Title :label lbl
-;; ...
-;; #+END_name
-;; As can be seen in [[prefix:lbl]]"
-;;   )
-
-(use-package org-special-block-extras :ensure t
-  :disabled
-  :hook (org-mode . org-special-block-extras-mode)
-  :config
-  (org-defblock theorem (name nil label nil) [:face 'org-link]
-                "Define new theorem with human-readable NAME."
-                (unless (equal backend 'latex)
-                  (error "Theorem block does not support this backend."))
-                (format "\\begin{theorem}%s\n%s%s\n\\end{theorem}"
-                        (or (and name (format "[%s]" name))
-                            "")
-                        (or (and label (format "\\label{%s}\n" label))
-                            "")
-                        contents))
-  (org-deflink theorem
-               (format "\\ref{%s}" o-label))
-
-  ;; (defmacro special-block-labels-push (name label)
-  ;;   (let ((labels (format "special-block-%s-labels" name))
-  ;;         (labels-cdr (format "special-block-%s-labels-cdr" name)))
-  ;;     `(let ((label (list (format "%s" ,label))))
-  ;;        (setq ,(intern labels-cdr)
-  ;;              (if ,(intern labels-cdr)
-  ;;                  (setcdr ,(intern labels-cdr) label)
-  ;;                (setq ,(intern labels) label))))))
-
-  ;; (defmacro defspeciallink (name prefix)
-  ;;   `(progn
-  ;;      (defvar ,(intern (format "special-block-%s-labels" name)) '()) ; to store this theroem labels
-  ;;      (defvar ,(intern (format "special-block-%s-labels-cdr" name)) nil)
-
-  ;;      (defblock ,prefix (ref nil) ()
-  ;;                ,(format "Reference a %s special block." name)
-  ;;                (format
-  ;;                 (cond
-  ;;                  ((org-export-derived-backend-p org-export-current-backend 'latex)
-  ;;                   ,(format "\\ref{%s:%%s}" prefix)) ; use standard ref in LateX
-  ;;                  ((org-export-derived-backend-p org-export-current-backend 'html)
-  ;;                   ,(format "<a href=\"#%s:%%s\">%%d</a>" prefix))) ; in HTML the number has to be print manually, finding the position of the label in the list
-  ;;                 ref (1+ (cl-position (format "%s" ref) ,(intern (format "special-block-%s-labels" name)) :test 'equal))))))
-                                        ; sum one because lists are zero based
-
-  ;; (defmacro deftheorem (name display-name prefix &optional tcb)
-;;     "Defines a new theorem type called NAME (rendered as DISPLAY-NAME in HTML) which labels start with PREFIX. If TCB is not nil, in LaTeX the tcbtheorem syntax is used.
-;; Usage:
-;; ,#+BEGIN_name Title :label lbl
-;; ....
-;; ,#+END_name
-;; As can be seen in [[prefix:lbl]]
-;;                 "
-;;     `(progn
-;;        (defspeciallink ,name ,prefix)
-
-;;        (defblock ,name (title nil) (label nil unnumbered nil)
-;;                  ,(format "Define %s special block." name)
-;;                  (unless unnumbered (special-block-labels-push ,name label)) ; add label to list
-;;                  (format
-;;                   (cond
-;;                    ((org-export-derived-backend-p org-export-current-backend 'latex)
-;;                     (concat ,(format "\\begin{%s" name) (when unnumbered "*") "}"
-;;                             ,(if tcb "{%s}{%s}" (format "[%%s]\\label{%s:%%s}" prefix)) ; tcbtheorem or standard
-;;                             "\n%s"
-;;                             ,(format "\\end{%s" name) (when unnumbered "*") "}"))
-;;                    ((org-export-derived-backend-p org-export-current-backend 'html)
-;;                     (concat ,(format "<p class=\"admonition-title %s\">%s" name display-name)
-;;                             (unless unnumbered (format " %d" (length ,(intern (format "special-block-%s-labels" name)))))
-;;                             (when title ": ") "%s</p>"
-;;                             ,(format "<div id=\"%s:%%s\" class=\"special-block %s\">%%s</div>" prefix name))))
-;;                   (or title "") (or label "") contents))))
-  )
 
 (defun denote-quick (&optional arg)
   "Wrapper around `denote' that changes prompts based on prefix ARG.
