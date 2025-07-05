@@ -49,6 +49,10 @@
          ("M-c" . capitalize-dwim)
          ("C-h '" . describe-char)
          ("C-c d" . duplicate-dwim)
+         ("C-z" . nil)                  ; Quite useless key for me
+         ("C-z s" . profiler-start)
+         ("C-z p" . profiler-stop)
+         ("C-z r" . profiler-report)
          ;; ("C-c C-j" . recompile)
          ;; ("C-c C-;" . compile)
          )
@@ -290,7 +294,7 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
 
-(use-package embark :ensure t
+(use-package embark :ensure t :demand t
   :bind
   (;("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-act)        ;; good alternative: M-.
@@ -440,9 +444,9 @@
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (use-package laas :ensure t
-  :hook LaTeX-mode
+  :hook (LaTeX-mode org-mode)
   :custom (laas-enable-auto-space nil)
-  :config ; do whatever here
+  :config
   (aas-set-snippets 'laas-mode
                     ;; set condition!
                     :cond #'texmathp ; expand only while in math
@@ -475,13 +479,13 @@
           (?t ("\\tau"     "\\cap" "\\bigcap"))
           (?. ("\\cdot"    "\\dots")))))
 
+(use-package abbrev
+  :hook (org-mode))
+
 (use-package org
-  :after (tempel laas)
   :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
                 :branch "dev")
   :hook ((org-mode . org-cdlatex-mode)
-         (org-mode . laas-mode)
-         (org-mode . abbrev-mode)
          (org-mode . tempel-abbrev-mode)
          (org-mode . org-latex-preview-auto-mode)
          (org-mode . visual-line-mode))
@@ -529,7 +533,7 @@
 
 (use-package jinx :ensure t
   :after embark
-  ;; :hook (emacs-startup . global-jinx-mode)
+  :hook (org-mode)
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages))
   :config
@@ -538,8 +542,7 @@
   (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
   (add-to-list 'embark-repeat-actions #'jinx-next)
   (add-to-list 'embark-repeat-actions #'jinx-previous)
-  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target))
-  (global-jinx-mode))
+  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
 
 ;; (defmacro deftheoremlink (name prefix)
 ;;   "Define org link type with PREFIX for theorem type NAME"
@@ -713,7 +716,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package pdf-tools :ensure t :demand t
   :hook (pdf-view-mode . auto-revert-mode)
-  :config (pdf-tools-install))
+  :config (pdf-loader-install))
 
 (use-package eglot
   :after embark
