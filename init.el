@@ -771,6 +771,16 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :hook
   (rust-mode . cargo-minor-mode)
   :config
+  ;; Redefine function for fun and profit. We want to see all output
+  ;; by default.
+  (defun cargo-mode-test-current-test (&optional prefix)
+    "Run the Cargo test command for the current test.
+If PREFIX is non-nil, prompt for additional params."
+    (interactive "P")
+    (let* ((project-root (cargo-mode--project-directory))
+           (test-name (cargo-mode--current-test-fullname))
+           (command (concat cargo-mode-command-test " " test-name " " "-- --nocapture")))
+      (cargo-mode--start "test" command project-root prefix)))
   (setq compilation-scroll-output t)
   (define-key cargo-minor-mode-map (kbd "C-c C-c") 'cargo-mode-command-map))
 
