@@ -48,7 +48,7 @@
          ("M-u" . upcase-dwim)
          ("M-c" . capitalize-dwim)
          ("C-h '" . describe-char)
-         ("C-c d" . duplicate-dwim)
+         ("C-," . duplicate-dwim)
          ("C-z" . nil)                  ; Quite useless key for me
          ("C-z s" . profiler-start)
          ("C-z p" . profiler-stop)
@@ -139,7 +139,10 @@
   (set-face-attribute 'variable-pitch nil :family "CMU Serif" :height 180 :weight 'thin)
 
   ;; View mode by default for read-only files
-  (setq view-read-only t))
+  (setq view-read-only t)
+
+  ;; This will allow to sentence jump functions to behave as expected.
+  (setq sentence-end-double-space nil))
 
 (use-package term :ensure nil
   :config
@@ -460,6 +463,7 @@
                     "bint" "\\bigcap"
                     "un" "\\cup"
                     "bun" "\\bigcup"
+                    "cop" "\\circ"
                     "pr" '(tempel "\\left( " r " \\right)")
                     "bk" '(tempel "\\left[ " r " \\right]")
                     "sm" '(tempel "\\sum" r)
@@ -663,9 +667,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
-(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
-  :after eglot
-  :config	(eglot-booster-mode))
+;; (use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
+;;   :after eglot
+;;   :config	(eglot-booster-mode))
 
 (use-package command-log-mode :ensure t)
 

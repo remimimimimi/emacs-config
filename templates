@@ -62,16 +62,3 @@ org-mode :when (or (org-inside-LaTeX-fragment-p)
 
 (sst
  "\\left\\{ " p " \\middle| " p " \\right\\}")
-
-
-;; (thm
-;;  "#+attr_latex: :options [" (s name) "]" n>
-;;  "#+begin_theorem" n> ()
-;;  r> n
-;;  "#+end_theorem")
-
-;; (thml
-;;  "#+attr_latex: :options [" (s name) "]" n>
-;;  "#+begin_theorem" n> ()
-;;  p> n
-;;  "#+end_theorem")
