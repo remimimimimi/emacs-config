@@ -215,7 +215,7 @@
   (set-fontset-font "fontset-default" 'saurashtra "Noto Sans Saurashtra")
   (set-fontset-font "fontset-default" 'shavian "Noto Sans Shavian")
   (set-fontset-font "fontset-default" 'sinhala "Noto Sans Sinhala")
-  (set-fontset-font "fontset-default" 'sinhala-archaic-number "Noto Sans Sinhala")
+  ;; (set-fontset-font "fontset-default" 'sinhala-archaic-number "Noto Sans Sinhala")
   (set-fontset-font "fontset-default" 'sundanese "Noto Sans Sundanese")
   (set-fontset-font "fontset-default" 'syloti-nagri "Noto Sans Syloti Nagri")
   (set-fontset-font "fontset-default" 'syriac "Noto Sans Syriac Estrangela")
