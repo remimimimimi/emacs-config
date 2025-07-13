@@ -36,6 +36,11 @@ org-mode
  r> n
  "#+end_theorem")
 
+(crlry
+ "#+begin_corollary" n>
+ r> n
+ "#+end_corollary")
+
 org-mode :when (or (org-inside-LaTeX-fragment-p)
                    (eq (org-element-type (org-element-at-point)) 'latex-environment))
 

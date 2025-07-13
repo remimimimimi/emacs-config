@@ -561,6 +561,7 @@
                     "un" "\\cup"
                     "bun" "\\bigcup"
                     "cop" "\\circ"
+                    "cng" "\\cong"
                     "pr" '(tempel "\\left( " r " \\right)")
                     "bk" '(tempel "\\left[ " r " \\right]")
                     "sm" '(tempel "\\sum" r)
