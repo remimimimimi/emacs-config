@@ -767,9 +767,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
-;; (use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
-;;   :after eglot
-;;   :config	(eglot-booster-mode))
+(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
+  :after eglot
+  :config (eglot-booster-mode))
 
 (use-package command-log-mode :ensure t)
 
