@@ -305,6 +305,8 @@
 ;; If you want more context-related completions consider `cape' package
 (use-package corfu :ensure t
   :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
+  :custom ((corfu-auto t)
+           (corfu-auto-delay 0.04))
   :init
   (global-corfu-mode))
 
