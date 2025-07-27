@@ -824,13 +824,18 @@ If PREFIX is non-nil, prompt for additional params."
     (interactive "P")
     (let* ((project-root (cargo-mode--project-directory))
            (test-name (cargo-mode--current-test-fullname))
-           (command (concat cargo-mode-command-test " " test-name " " "-- --nocapture")))
+           (command (concat cargo-mode-command-test " --all-features " test-name " " "-- --nocapture")))
       (cargo-mode--start "test" command project-root prefix)))
   (setq compilation-scroll-output t)
   (define-key cargo-minor-mode-map (kbd "C-c C-c") 'cargo-mode-command-map))
 
-(use-package pu-mode
-  :ensure (:type git :host github :repo "remimimimimi/pu.el" :branch "main" :files ("pu-mode.el")))
+(use-package go-ts-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+  (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode)))
+
+;; (use-package pu-mode
+;;   :ensure (:type git :host github :repo "remimimimimi/pu.el" :branch "main" :files ("pu-mode.el")))
 
 (use-package lean4-mode
   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
