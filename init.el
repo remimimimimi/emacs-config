@@ -801,11 +801,16 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 (use-package rust-mode :ensure t
   :hook (rust-mode . electric-pair-mode)
   :init
+  (defun rust-check ()
+    "Compile using `cargo check`"
+    (interactive)
+    (rust--compile nil "%s check --all-targets --all-features %s" rust-cargo-bin rust-cargo-default-arguments))
   ;; (setq rust-mode-treesitter-derive t)
   (setq rust-load-optional-libraries t)
   (add-hook 'rust-mode-hook 'eglot-ensure) ; TODO: Rewrite using `use-package'
   :config
-  (setq rust-format-on-save t))
+  ;; (setq rust-format-on-save nil)
+  )
 
 (use-package cargo-mode :ensure t
   :hook
