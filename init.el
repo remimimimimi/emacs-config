@@ -506,8 +506,8 @@
 (use-package ef-themes :ensure t :demand t
   :bind ("C-c t t" . ef-themes-toggle)
   :config
-  (setq ef-themes-to-toggle '(ef-light ef-dark))
-  (load-theme 'ef-light t))
+  (setq ef-themes-to-toggle '(ef-spring ef-dark))
+  (load-theme 'ef-spring t))
 
 (use-package modus-themes :ensure t :disabled
   ;; :config
