@@ -786,6 +786,16 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package command-log-mode :ensure t)
 
+;; install claude-code.el, using :depth 1 to reduce download size:
+(use-package claude-code
+  :ensure (:type git :host github :repo "stevemolitor/claude-code.el" :branch "main" :depth 1
+                   :files ("*.el" (:exclude "images/*")))
+  :bind-keymap
+  ("C-z C-c" . claude-code-command-map) ;; or your preferred key
+  :config
+  (setq claude-code-terminal-backend 'eat)
+  (claude-code-mode))
+
 ;;; Language-specific packages
 (use-package nix-mode :ensure t
   :hook (nix-mode . electric-pair-mode))
