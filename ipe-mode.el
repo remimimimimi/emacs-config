@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;; This minor mode provides functions to create, edit, and insert Ipe vector
 ;; graphics files with LaTeX integration, particularly useful in org-mode.
+;; TODO: https://orgmode.org/manual/Images.html
 
 ;;; Code:
 
