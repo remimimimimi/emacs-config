@@ -562,6 +562,9 @@
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
+(use-package vterm
+  :ensure t)
+
 (use-package laas :ensure t
   :hook (LaTeX-mode org-mode)
   :custom (laas-enable-auto-space nil)
@@ -793,7 +796,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :bind-keymap
   ("C-c C-z" . claude-code-command-map) ;; or your preferred key
   :config
-  (setq claude-code-terminal-backend 'eat)
+  (setq claude-code-terminal-backend 'vterm)
   (claude-code-mode))
 
 ;;; Language-specific packages
