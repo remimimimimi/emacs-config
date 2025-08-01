@@ -755,6 +755,10 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
   (denote-rename-buffer-mode 1))
 
+(use-package toml-ts-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode)))
+
 (use-package nov :ensure t
   :init
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
