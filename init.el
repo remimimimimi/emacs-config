@@ -800,9 +800,6 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (claude-code-mode))
 
 ;;; Language-specific packages
-(use-package nix-mode :ensure t
-  :hook (nix-mode . electric-pair-mode))
-
 (use-package typst-ts-mode
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el"))
   :hook ((typst-ts-mode . electric-pair-mode)
