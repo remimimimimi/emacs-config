@@ -893,8 +893,8 @@ If PREFIX is non-nil, prompt for additional params."
 
 (setq dabbrev-case-fold-search nil)
 
-;; Load custom ipe-mode
-(load-file "~/Projects/Mine/emacs-config/ipe-mode.el")
+;; ;; Load custom ipe-mode
+;; (load-file "~/Projects/Mine/emacs-config/ipe-mode.el")
 
 ;; Install all uninstalled packages
 (elpaca-process-queues)
