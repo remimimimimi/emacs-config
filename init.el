@@ -793,15 +793,21 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package command-log-mode :ensure t)
 
-;; install claude-code.el, using :depth 1 to reduce download size:
-(use-package claude-code
-  :ensure (:type git :host github :repo "stevemolitor/claude-code.el" :branch "main" :depth 1
-                   :files ("*.el" (:exclude "images/*")))
-  :bind-keymap
-  ("C-c C-z" . claude-code-command-map) ;; or your preferred key
+(use-package claude-code-ide
+  :ensure (:type git :host github :repo "manzaltu/claude-code-ide.el")
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
   :config
-  (setq claude-code-terminal-backend 'vterm)
-  (claude-code-mode))
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+
+;; ;; install claude-code.el, using :depth 1 to reduce download size:
+;; (use-package claude-code
+;;   :ensure (:type git :host github :repo "stevemolitor/claude-code.el" :branch "main" :depth 1
+;;                    :files ("*.el" (:exclude "images/*")))
+;;   :bind-keymap
+;;   ("C-c C-z" . claude-code-command-map) ;; or your preferred key
+;;   :config
+;;   (setq claude-code-terminal-backend 'vterm)
+;;   (claude-code-mode))
 
 ;;; Language-specific packages
 (use-package typst-ts-mode
