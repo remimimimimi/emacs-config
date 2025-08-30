@@ -253,6 +253,14 @@
     (setq pixel-scroll-precision-use-momentum nil) ; Precise/smoother scrolling
     (pixel-scroll-precision-mode 1)))
 
+(use-package xclip
+  :ensure t
+  :config
+  (setq xclip-program "wl-copy")
+  (setq xclip-select-enable-clipboard t)
+  (setq xclip-mode t)
+  (setq xclip-method 'wl-copy))
+
 (use-package term :ensure nil
   :config
   ;; Allow switching windows in ansi-term char mode
