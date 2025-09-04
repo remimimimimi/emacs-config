@@ -574,6 +574,42 @@
 (use-package vterm
   :ensure t)
 
+(use-package org
+  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+                :branch "dev")
+  :hook ((org-mode . org-cdlatex-mode)
+         (org-mode . tempel-abbrev-mode)
+         (org-mode . org-latex-preview-mode)
+         (org-mode . visual-line-mode)
+         (org-mode . variable-pitch-mode))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c d" . org-deadline)
+         ;; We will use laas-mode
+         :map org-cdlatex-mode-map
+         ("`" . nil)
+         ("'" . nil)
+         :map org-mode-map
+         (("C-c C-;" . org-store-link)
+          ("C-," . nil)))
+  :custom ((org-log-done t)
+           ;; (org-pretty-entities t)
+           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
+           (org-latex-preview-live '(block inline edit-special))
+           (org-highlight-latex-and-related '(latex script entities))
+           ;; (org-latex-preview-preamble "\\documentclass{article}
+;; [DEFAULT-PACKAGES]
+;; [PACKAGES]
+;; \\usepackage{xcolor}
+;; \\usepackage{amsmath}
+;; \\DeclareMathOperator{\\diam}{diam}")
+           )
+  :config
+  (add-hook 'org-mode-hook (lambda ()
+    (setq-local electric-pair-inhibit-predicate
+      `(lambda (c)
+         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+
 (use-package laas :ensure t
   :hook (LaTeX-mode org-mode)
   :custom (laas-enable-auto-space nil)
@@ -614,41 +650,6 @@
 
 (use-package abbrev
   :hook (org-mode))
-
-(use-package org
-  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
-                :branch "dev")
-  :hook ((org-mode . org-cdlatex-mode)
-         (org-mode . tempel-abbrev-mode)
-         (org-mode . org-latex-preview-auto-mode)
-         (org-mode . visual-line-mode)
-         (org-mode . variable-pitch-mode))
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c d" . org-deadline)
-         ;; We will use laas-mode
-         :map org-cdlatex-mode-map
-         ("`" . nil)
-         ("'" . nil)
-         :map org-mode-map
-         ("C-c C-;" . org-store-link))
-  :custom ((org-log-done t)
-           ;; (org-pretty-entities t)
-           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
-           (org-latex-preview-live '(block inline edit-special))
-           (org-highlight-latex-and-related '(latex script entities))
-           ;; (org-latex-preview-preamble "\\documentclass{article}
-;; [DEFAULT-PACKAGES]
-;; [PACKAGES]
-;; \\usepackage{xcolor}
-;; \\usepackage{amsmath}
-;; \\DeclareMathOperator{\\diam}{diam}")
-           )
-  :config
-  (add-hook 'org-mode-hook (lambda ()
-    (setq-local electric-pair-inhibit-predicate
-      `(lambda (c)
-         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package org-modern :ensure t
   :init
