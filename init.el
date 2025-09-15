@@ -803,6 +803,12 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package command-log-mode :ensure t)
 
+(use-package dape :ensure t)
+
+(use-package repeat
+  :custom
+  (repeat-mode +1))
+
 ;;; Language-specific packages
 (use-package typst-ts-mode
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el"))
