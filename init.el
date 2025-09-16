@@ -541,6 +541,8 @@
 (use-package transient :ensure t)
 
 (use-package magit :ensure t)
+(use-package forge :ensure t
+  :after magit)
 
 (use-package avy :ensure t
   :bind ("M-j" . avy-goto-char-timer)
