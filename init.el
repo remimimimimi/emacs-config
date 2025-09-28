@@ -806,7 +806,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package command-log-mode :ensure t)
 
-(use-package dape :ensure t)
+(use-package dape :ensure t
+  :config
+  (dape-breakpoint-global-mode))
 
 (use-package repeat
   :custom
