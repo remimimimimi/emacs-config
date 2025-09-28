@@ -671,6 +671,17 @@
   ;; TODO: https://github.com/jdtsmith/org-modern-indent
   (global-org-modern-mode))
 
+(use-package org-pomodoro
+  :ensure t
+  :config
+  (add-hook 'org-pomodoro-break-finished-hook
+            (lambda ()
+              (interactive)
+              (point-to-register 1)
+              (org-clock-goto)
+              (org-pomodoro '(25))
+              (register-to-point 1))))
+
 (use-package vundo :ensure t
   :bind ("C-z v" . vundo))
 
