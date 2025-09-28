@@ -597,7 +597,7 @@
           ("C-," . nil)))
   :custom ((org-log-done t)
            ;; (org-pretty-entities t)
-           (org-agenda-files '("~/Documents/Agenda" "~/.notes"))
+           (org-agenda-files '("~/.notes"))
            (org-latex-preview-live '(block inline edit-special))
            (org-highlight-latex-and-related '(latex script entities))
            ;; (org-latex-preview-preamble "\\documentclass{article}
