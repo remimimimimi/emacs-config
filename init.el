@@ -513,26 +513,33 @@
 (use-package tempel-collection :ensure t)
 
 ;; Lovely themes
-(use-package ef-themes :ensure t :demand t
-  :bind ("C-c t t" . ef-themes-toggle)
+;; (use-package ef-themes :ensure t :demand t
+;;   ;; :bind ("C-c t t" . ef-themes-toggle)
+;;   :config
+;;   (setq ef-themes-to-toggle '(ef-winter ef-summer))
+;;   ;; (load-theme 'ef-winter t)
+;;   )
+
+;; (use-package modus-themes :ensure t :disabled
+;;   ;; :config
+;;   ;; (load-theme 'modus-vivendi t)
+;;   )
+
+;; (use-package tao-theme :ensure t
+;;   ;; :config
+;;   ;; (fringe-mode 0)
+;;   ;; (load-theme 'tao-yin t)
+;;   )
+
+(use-package stimmung-themes
+  :ensure t :demand t
+  :bind ("C-c t t" . stimmung-themes-toggle)
   :config
-  (setq ef-themes-to-toggle '(ef-winter ef-summer))
-  (load-theme 'ef-winter t))
-
-(use-package modus-themes :ensure t :disabled
-  ;; :config
-  ;; (load-theme 'modus-vivendi t)
-  )
-
-(use-package tao-theme :ensure t
-  ;; :config
-  ;; (fringe-mode 0)
-  ;; (load-theme 'tao-yin t)
-  )
+  (stimmung-themes-load-dark))
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
-  :hook (prog-mode typst-ts-mode))
+  :hook (prog-mode typst-ts-mode yaml-ts-mode))
 
 (use-package hl-todo :ensure t
   :init
