@@ -795,7 +795,8 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
 (use-package pdf-tools :ensure t :demand t
-  :hook (pdf-view-mode . auto-revert-mode)
+  :hook ((pdf-view-mode . auto-revert-mode)
+         (pdf-view-mode . pdf-view-themed-minor-mode))
   :config (pdf-loader-install))
 
 (use-package eglot
