@@ -136,6 +136,7 @@
   ;; Set fonts
   (set-frame-font "Source Code Pro 13" nil t)
   ;; Took that from https://www.1001fonts.com/cmu-font.html
+  (set-face-attribute 'fixed-pitch nil :family "Source Code Pro" :height 140 :weight 'regular)
   (set-face-attribute 'variable-pitch nil :family "CMU Serif" :height 180 :weight 'thin)
 
   ;; Set fonts for all other unicode characters
