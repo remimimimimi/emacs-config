@@ -255,6 +255,54 @@
   ;;   (pixel-scroll-precision-mode 1))
   )
 
+;; Newer version of transient package required for magit.
+;; (use-package cond-let :ensure (:type git :host github :repo "tarsius/cond-let"))
+(use-package transient
+  :demand t
+  :ensure (:type git :host github :repo "tarsius/transient"
+                 :ref "82baa889668d716e4d3b01e4a1d88f748993161e"))
+(use-package magit :ensure t)
+(use-package forge :ensure t
+  :after magit)
+
+(use-package org
+  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+                :branch "dev"
+                :wait t)
+  :demand t
+  :hook ((org-mode . org-cdlatex-mode)
+         (org-mode . tempel-abbrev-mode)
+         (org-mode . org-latex-preview-mode)
+         (org-mode . visual-line-mode)
+         (org-mode . variable-pitch-mode))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c d" . org-deadline)
+         ;; We will use laas-mode
+         :map org-cdlatex-mode-map
+         ("`" . nil)
+         ("'" . nil)
+         :map org-mode-map
+         (("C-c C-;" . org-store-link)
+          ("C-," . nil)))
+  :custom ((org-log-done t)
+           ;; (org-pretty-entities t)
+           (org-agenda-files '("~/.notes"))
+           (org-latex-preview-live '(block inline edit-special))
+           (org-highlight-latex-and-related '(latex script entities))
+           ;; (org-latex-preview-preamble "\\documentclass{article}
+;; [DEFAULT-PACKAGES]
+;; [PACKAGES]
+;; \\usepackage{xcolor}
+;; \\usepackage{amsmath}
+;; \\DeclareMathOperator{\\diam}{diam}")
+           )
+  :config
+  (add-hook 'org-mode-hook (lambda ()
+    (setq-local electric-pair-inhibit-predicate
+      `(lambda (c)
+         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+
 (use-package xclip
   :ensure t
   :config
@@ -546,13 +594,6 @@
   :init
   (global-hl-todo-mode))
 
-;; Newer version of transient package required for magit.
-(use-package transient :ensure t)
-
-(use-package magit :ensure t)
-(use-package forge :ensure t
-  :after magit)
-
 (use-package avy :ensure t
   :bind ("M-j" . avy-goto-char-timer)
   :config
@@ -584,42 +625,6 @@
 
 (use-package vterm
   :ensure t)
-
-(use-package org
-  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
-                :branch "dev")
-  :hook ((org-mode . org-cdlatex-mode)
-         (org-mode . tempel-abbrev-mode)
-         (org-mode . org-latex-preview-mode)
-         (org-mode . visual-line-mode)
-         (org-mode . variable-pitch-mode))
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c d" . org-deadline)
-         ;; We will use laas-mode
-         :map org-cdlatex-mode-map
-         ("`" . nil)
-         ("'" . nil)
-         :map org-mode-map
-         (("C-c C-;" . org-store-link)
-          ("C-," . nil)))
-  :custom ((org-log-done t)
-           ;; (org-pretty-entities t)
-           (org-agenda-files '("~/.notes"))
-           (org-latex-preview-live '(block inline edit-special))
-           (org-highlight-latex-and-related '(latex script entities))
-           ;; (org-latex-preview-preamble "\\documentclass{article}
-;; [DEFAULT-PACKAGES]
-;; [PACKAGES]
-;; \\usepackage{xcolor}
-;; \\usepackage{amsmath}
-;; \\DeclareMathOperator{\\diam}{diam}")
-           )
-  :config
-  (add-hook 'org-mode-hook (lambda ()
-    (setq-local electric-pair-inhibit-predicate
-      `(lambda (c)
-         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package laas :ensure t
   :hook (LaTeX-mode org-mode)
@@ -662,22 +667,23 @@
 (use-package abbrev
   :hook (org-mode))
 
-(use-package org-modern :ensure t
-  :init
-  (setq
-   ;; Edit settings
-   org-auto-align-tags t
-   org-tags-column 0
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
+;; (use-package org-modern :ensure t
+;;   :disabled t
+;;   :init
+;;   (setq
+;;    ;; Edit settings
+;;    org-auto-align-tags t
+;;    org-tags-column 0
+;;    org-catch-invisible-edits 'show-and-error
+;;    org-special-ctrl-a/e t
+;;    org-insert-heading-respect-content t
 
-   ;; Org styling, hide markup etc.
-   org-hide-emphasis-markers t
-   org-agenda-tags-column 0
-   org-ellipsis "…")
-  ;; TODO: https://github.com/jdtsmith/org-modern-indent
-  (global-org-modern-mode))
+;;    ;; Org styling, hide markup etc.
+;;    org-hide-emphasis-markers t
+;;    org-agenda-tags-column 0
+;;    org-ellipsis "…")
+;;   ;; TODO: https://github.com/jdtsmith/org-modern-indent
+;;   (global-org-modern-mode))
 
 (use-package org-pomodoro
   :ensure t
