@@ -840,6 +840,10 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :custom
   (repeat-mode +1))
 
+(use-package direnv :ensure t
+  :config
+  (direnv-mode))
+
 ;;; Language-specific packages
 (use-package typst-ts-mode
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el"))
