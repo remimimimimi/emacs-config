@@ -464,8 +464,8 @@
      (rust "https://github.com/tree-sitter/tree-sitter-rust")
      ;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
      (html "https://github.com/tree-sitter/tree-sitter-html")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+     ;; (go "https://github.com/tree-sitter/tree-sitter-go")
+     ;; (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
      ;; (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
      (json "https://github.com/tree-sitter/tree-sitter-json")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -876,10 +876,10 @@ If PREFIX is non-nil, prompt for additional params."
   (setq compilation-scroll-output t)
   (define-key cargo-minor-mode-map (kbd "C-c C-c") 'cargo-mode-command-map))
 
-(use-package go-ts-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-  (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode)))
+;; (use-package go-ts-mode
+;;   :init
+;;   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+;;   (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode)))
 
 ;; (use-package pu-mode
 ;;   :ensure (:type git :host github :repo "remimimimimi/pu.el" :branch "main" :files ("pu-mode.el")))
