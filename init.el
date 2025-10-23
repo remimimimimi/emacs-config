@@ -585,7 +585,7 @@
   :ensure t :demand t
   :bind ("C-c t t" . stimmung-themes-toggle)
   :config
-  (stimmung-themes-load-dark))
+  (stimmung-themes-load-light))
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
