@@ -518,7 +518,7 @@
      (json "https://github.com/tree-sitter/tree-sitter-json")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
+     ;; (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
      (typst "https://github.com/uben0/tree-sitter-typst")
@@ -529,7 +529,8 @@
           ;; (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
           (c-mode . c-ts-mode)
-          (python-mode . python-ts-mode)))
+          ;; (python-mode . python-ts-mode)
+          ))
   ;; ;; Run to install languages
   ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
   )
