@@ -261,7 +261,9 @@
   :demand t
   :ensure (:type git :host github :repo "tarsius/transient"
                  :ref "82baa889668d716e4d3b01e4a1d88f748993161e"))
-(use-package magit :ensure t)
+(use-package magit :ensure t
+  :init
+  (setq magit-define-global-key-bindings 'recommended))
 (use-package forge :ensure t
   :after magit)
 
