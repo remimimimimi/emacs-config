@@ -394,7 +394,10 @@
 ;; Use emacs 30.1 completion-preview-mode instead
 (use-package completion-preview
   :init
-  (global-completion-preview-mode))
+  (global-completion-preview-mode)
+  :bind ( :map completion-preview-active-mode-map
+          ("M-n" . completion-preview-next-candidate)
+          ("M-p" . completion-preview-prev-candidate)))
 
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
