@@ -374,24 +374,28 @@
   :init
   (marginalia-mode))
 
-(defun corfu-enable-in-minibuffer ()
-  "Enable Corfu in the minibuffer."
-  (when (local-variable-p 'completion-at-point-functions)
-    ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
-    (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                corfu-popupinfo-delay nil)
-    (corfu-mode 1)))
+;; (defun corfu-enable-in-minibuffer ()
+;;   "Enable Corfu in the minibuffer."
+;;   (when (local-variable-p 'completion-at-point-functions)
+;;     ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+;;     (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+;;                 corfu-popupinfo-delay nil)
+;;     (corfu-mode 1)))
 
 
 ;; General in-place auto completion
-;; If you want more context-related completions consider `cape' package
-(use-package corfu :ensure t
-  :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
-  :custom (corfu-auto t)
-  :init
-  (global-corfu-mode))
+;; ;; If you want more context-related completions consider `cape' package
+;; (use-package corfu :ensure t
+;;   :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
+;;   :custom (corfu-auto t)
+;;   :init
+;;   (global-corfu-mode))
 
-;; Use Dabbrev with Corfu!
+;; Use emacs 30.1 completion-preview-mode instead
+(use-package completion-preview
+  :init
+  (global-completion-preview-mode))
+
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)
