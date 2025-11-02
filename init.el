@@ -945,6 +945,10 @@ If PREFIX is non-nil, prompt for additional params."
 (use-package racket-mode
   :ensure t)
 
+(use-package c++-mode :ensure nil
+  :bind ( :map c++-mode-map
+          ("C-x C-o" . ff-find-other-file)))
+
 ;; (use-package proof-general
 ;;   :ensure t
 ;;   :demand t
