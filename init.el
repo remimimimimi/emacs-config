@@ -817,6 +817,14 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
   (denote-rename-buffer-mode 1))
 
+(use-package xterm-color
+  :ensure t
+  :config
+  (setq compilation-environment '("TERM=xterm-256color"))
+  (defun my/advice-compilation-filter (f proc string)
+    (funcall f proc (xterm-color-filter string)))
+  (advice-add 'compilation-filter :around #'my/advice-compilation-filter))
+
 (use-package toml-ts-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode)))
