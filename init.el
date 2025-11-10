@@ -956,6 +956,9 @@ If PREFIX is non-nil, prompt for additional params."
   :bind ( :map c++-mode-map
           ("C-x C-o" . ff-find-other-file)))
 
+(use-package odin-mode
+  :ensure (:type git :host sourcehut :repo "mgmarlow/odin-mode" :files (:defaults "*.el")))
+
 ;; (use-package proof-general
 ;;   :ensure t
 ;;   :demand t
