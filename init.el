@@ -554,7 +554,7 @@
           (bash-mode . bash-ts-mode)
           ;; (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
-          (c-mode . c-ts-mode)
+          ;; (c-mode . c-ts-mode)
           ;; (python-mode . python-ts-mode)
           ))
   ;; ;; Run to install languages
