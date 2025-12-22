@@ -828,6 +828,19 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
     (funcall f proc (xterm-color-filter string)))
   (advice-add 'compilation-filter :around #'my/advice-compilation-filter))
 
+
+
+;; (use-package ansi-color
+;;   :ensure nil
+;;   :hook (compilation-filter . ansi-color-compilation-filter))
+
+;; (use-package fancy-compilation
+;;   :ensure t
+;;   :commands (fancy-compilation-mode)
+;;   :config
+;;   (with-eval-after-load 'compile
+;;     (fancy-compilation-mode)))
+
 (use-package toml-ts-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode)))
