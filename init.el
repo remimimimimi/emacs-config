@@ -242,6 +242,9 @@
   ;; This will allow to sentence jump functions to behave as expected.
   (setq sentence-end-double-space nil)
 
+  ;; Change cursor type
+  (setq cursor-type 'hbar)
+
   ;; Enable smooth scrolling
   ;; (unless (and (eq window-system 'mac)
   ;;              (bound-and-true-p mac-carbon-version-string))
