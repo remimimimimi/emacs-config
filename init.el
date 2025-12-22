@@ -968,12 +968,39 @@ If PREFIX is non-nil, prompt for additional params."
 (use-package racket-mode
   :ensure t)
 
-(use-package c++-mode :ensure nil
-  :bind ( :map c++-mode-map
-          ("C-x C-o" . ff-find-other-file)))
+(use-package c-mode :ensure nil
+  :bind ( :map c-mode-map
+          ("C-x C-o" . ff-find-other-file))
+  :config
+  (defun use-tabs-instead-of-spaces ()
+    (setq indent-tabs-mode t
+          tab-width 8
+          js-indent-level 8))
+  (add-hook 'c-mode-hook #'use-tabs-instead-of-spaces)
+  (add-hook 'c-mode-hook #'eglot-ensure)
+  (add-hook 'c-mode-hook (lambda ()
+                              (setq-local comment-start "//"
+                                          comment-end ""))))
 
 (use-package odin-mode
-  :ensure (:type git :host sourcehut :repo "mgmarlow/odin-mode" :files (:defaults "*.el")))
+  :ensure (:type git :host sourcehut :repo "mgmarlow/odin-mode" :files (:defaults "*.el"))
+  :config
+  (defun use-tabs-instead-of-spaces ()
+    (setq indent-tabs-mode t
+          tab-width 8
+          js-indent-level 8))
+  (add-hook 'odin-mode-hook #'use-tabs-instead-of-spaces)
+  (add-hook 'odin-mode-hook #'eglot-ensure)
+  (add-hook 'odin-mode-hook (lambda ()
+                              (setq-local comment-start "//"
+                                          comment-end ""))))
+
+(use-package forth-mode
+  :ensure t)
+
+(use-package smart-tabs-mode :ensure t
+  :config
+  (smart-tabs-advice js-indent-line js-indent-level))
 
 ;; (use-package proof-general
 ;;   :ensure t
