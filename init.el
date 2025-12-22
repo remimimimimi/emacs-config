@@ -589,17 +589,17 @@
 (use-package tempel-collection :ensure t)
 
 ;; Lovely themes
-;; (use-package ef-themes :ensure t :demand t
-;;   ;; :bind ("C-c t t" . ef-themes-toggle)
-;;   :config
-;;   (setq ef-themes-to-toggle '(ef-winter ef-summer))
-;;   ;; (load-theme 'ef-winter t)
-;;   )
+(use-package ef-themes :ensure t :demand t
+  ;; :bind ("C-c t t" . ef-themes-toggle)
+  :config
+  (setq ef-themes-to-toggle '(ef-winter ef-summer))
+  ;; (load-theme 'ef-winter t)
+  )
 
-;; (use-package modus-themes :ensure t :disabled
-;;   ;; :config
-;;   ;; (load-theme 'modus-vivendi t)
-;;   )
+(use-package modus-themes :ensure t :disabled
+  ;; :config
+  ;; (load-theme 'modus-vivendi t)
+  )
 
 ;; (use-package tao-theme :ensure t
 ;;   ;; :config
@@ -608,10 +608,16 @@
 ;;   )
 
 (use-package stimmung-themes
+  :disabled
   :ensure t :demand t
   :bind ("C-c t t" . stimmung-themes-toggle)
   :config
   (stimmung-themes-load-light))
+
+(use-package gruvbox-theme
+  :ensure t :demand t
+  :config
+  (load-theme 'gruvbox-light-soft t))
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
