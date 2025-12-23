@@ -910,36 +910,11 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   ;; (optional) If you want to ensure your typst tree sitter grammar version is greater than the minimum requirement
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)))
 
-(use-package rust-mode :ensure t
-  :hook (rust-mode . electric-pair-mode)
-  :init
-  (defun rust-check ()
-    "Compile using `cargo check`"
-    (interactive)
-    (rust--compile nil "%s check --all-targets --all-features %s" rust-cargo-bin rust-cargo-default-arguments))
-  ;; (setq rust-mode-treesitter-derive t)
-  (setq rust-load-optional-libraries t)
-  (add-hook 'rust-mode-hook 'eglot-ensure) ; TODO: Rewrite using `use-package'
+(use-package rustic :ensure t
   :config
-  ;; (setq rust-format-on-save nil)
-  )
-
-(use-package cargo-mode :ensure t
-  :hook
-  (rust-mode . cargo-minor-mode)
-  :config
-  ;; Redefine function for fun and profit. We want to see all output
-  ;; by default.
-  (defun cargo-mode-test-current-test (&optional prefix)
-    "Run the Cargo test command for the current test.
-If PREFIX is non-nil, prompt for additional params."
-    (interactive "P")
-    (let* ((project-root (cargo-mode--project-directory))
-           (test-name (cargo-mode--current-test-fullname))
-           (command (concat cargo-mode-command-test " --all-features " test-name " " "-- --nocapture")))
-      (cargo-mode--start "test" command project-root prefix)))
-  (setq compilation-scroll-output t)
-  (define-key cargo-minor-mode-map (kbd "C-c C-c") 'cargo-mode-command-map))
+  (setq rustic-lsp-client 'eglot
+        rustic-format-on-save t
+        rustic-format-display-method 'ignore))
 
 ;; (use-package go-ts-mode
 ;;   :init
