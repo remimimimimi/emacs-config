@@ -45,25 +45,25 @@ org-mode :when (or (org-inside-LaTeX-fragment-p)
                    (eq (org-element-type (org-element-at-point)) 'latex-environment))
 
 (lrp
- "\\left( " r " \\right)")
+ "\\left( " r " \\right) ")
 
 (lrb
- "\\left[ " r " \\right]")
+ "\\left[ " r " \\right] ")
 
 (lra
- "\\left\\langle " r " \\right\\rangle")
+ "\\left\\langle " r " \\right\\rangle ")
 
 (lrc
  "\\left\\{ " r " \\right\\}")
 
 (st
- "\\left\\{ " r " \\right\\}")
+ "\\left\\{ " r " \\right\\} ")
 
 (abs
- "\\left| " r " \\right|")
+ "\\left| " r " \\right| ")
 
 (norm
- "\\left\\lVert " r " \\right\\rVert")
+ "\\left\\lVert " r " \\right\\rVert ")
 
 (sst
- "\\left\\{ " p " \\middle| " p " \\right\\}")
+ "\\left\\{ " p " \\mid " p " \\right\\} ")
