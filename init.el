@@ -969,6 +969,11 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package odin-mode
   :ensure (:type git :host sourcehut :repo "mgmarlow/odin-mode" :files (:defaults "*.el"))
+  :bind ( :map odin-mode-map
+          ("C-c C-f" . eglot-format)
+          ("C-c C-r" . odin-run-project)
+          ("C-c C-c" . odin-check-project)
+          ("C-c C-t" . odin-test-project))
   :config
   (defun use-tabs-instead-of-spaces ()
     (setq indent-tabs-mode t
