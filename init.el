@@ -669,9 +669,13 @@
                     "sub" "\\subset"
                     "seq" "\\subseteq"
                     "int" "\\cap"
+                    "sqint" "\\sqcap"
                     "bint" "\\bigcap"
+                    "bsqint" "\\bigsqcap"
                     "un" "\\cup"
+                    "squn" "\\sqcup"
                     "bun" "\\bigcup"
+                    "bsqun" "\\bigsqcup"
                     "cop" "\\circ"
                     "cng" "\\cong"
                     "pr" '(tempel "\\left( " r " \\right)")
