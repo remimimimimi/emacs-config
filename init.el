@@ -928,9 +928,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package cmake-mode :ensure t)
 
-;; (use-package lean4-mode
-;;   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
-;;   :custom (lean4-keybinding-refresh-file-dependencies (kbd "C-c d")))
+(use-package lean4-mode
+  :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
+  :custom (lean4-keybinding-refresh-file-dependencies (kbd "C-c d")))
 
 (use-package paredit :ensure t
   :hook emacs-lisp-mode)
