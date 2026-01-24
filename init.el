@@ -589,8 +589,8 @@
 (use-package ef-themes :ensure t :demand t
   ;; :bind ("C-c t t" . ef-themes-toggle)
   :config
-  (setq ef-themes-to-toggle '(ef-winter ef-summer))
-  ;; (load-theme 'ef-winter t)
+  (setq ef-themes-to-toggle '(ef-night ef-summer))
+  (load-theme 'ef-night t)
   )
 
 (use-package modus-themes :ensure t :disabled
@@ -614,7 +614,8 @@
 (use-package gruvbox-theme
   :ensure t :demand t
   :config
-  (load-theme 'gruvbox-light-soft t))
+  ;; (load-theme 'gruvbox-light-soft t)
+  )
 
 ;; Trim unnecessary whitespace.
 (use-package ws-butler :ensure t
