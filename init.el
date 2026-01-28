@@ -898,6 +898,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (repeat-mode +1))
 
 (use-package direnv :ensure t
+  :disabled
   :config
   (direnv-mode))
 
