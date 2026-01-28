@@ -676,6 +676,9 @@
                     "bsqun" "\\bigsqcup"
                     "cop" "\\circ"
                     "cng" "\\cong"
+                    "sum" "\\sum"
+                    "sup" "\\sup"
+                    "inf" "\\inf"
                     "pr" '(tempel "\\left( " r " \\right)")
                     "bk" '(tempel "\\left[ " r " \\right]")
                     "sm" '(tempel "\\sum" r)
