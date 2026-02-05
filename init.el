@@ -972,12 +972,15 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 
 (use-package odin-ts-mode
   :load-path "custom-packages"
+  :mode "\\.odin\\'"
   :config
-  (setq
-   indent-tabs-mode t
-   tab-width 8
-   js-indent-level 8
-   treesit-font-lock-level 2))          ; Only highlight what's needed.
+  (setq treesit-font-lock-level 2)
+  (defun use-tabs-instead-of-spaces ()
+    (setq indent-tabs-mode t
+          tab-width 8
+          js-indent-level 8))
+  (add-hook 'odin-ts-mode-hook #'use-tabs-instead-of-spaces)
+  (add-hook 'odin-ts-mode-hook #'eglot-ensure))          ; Only highlight what's needed.
 
 (use-package forth-mode
   :ensure t)
