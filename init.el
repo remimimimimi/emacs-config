@@ -541,6 +541,7 @@
      (json "https://github.com/tree-sitter/tree-sitter-json")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
      ;; (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
@@ -969,23 +970,14 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
                               (setq-local comment-start "//"
                                           comment-end ""))))
 
-(use-package odin-mode
-  :ensure (:type git :host sourcehut :repo "mgmarlow/odin-mode" :files (:defaults "*.el"))
-  :bind ( :map odin-mode-map
-          ("C-c C-f" . eglot-format)
-          ("C-c C-r" . odin-run-project)
-          ("C-c C-c" . odin-check-project)
-          ("C-c C-t" . odin-test-project))
+(use-package odin-ts-mode
+  :load-path "custom-packages"
   :config
-  (defun use-tabs-instead-of-spaces ()
-    (setq indent-tabs-mode t
-          tab-width 8
-          js-indent-level 8))
-  (add-hook 'odin-mode-hook #'use-tabs-instead-of-spaces)
-  (add-hook 'odin-mode-hook #'eglot-ensure)
-  (add-hook 'odin-mode-hook (lambda ()
-                              (setq-local comment-start "//"
-                                          comment-end ""))))
+  (setq
+   indent-tabs-mode t
+   tab-width 8
+   js-indent-level 8
+   treesit-font-lock-level 2))          ; Only highlight what's needed.
 
 (use-package forth-mode
   :ensure t)
