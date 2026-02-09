@@ -44,18 +44,12 @@
 
 (use-package emacs :ensure nil
   :bind (("M-o" . other-window)
-         ("M-l" . downcase-dwim)
-         ("M-u" . upcase-dwim)
-         ("M-c" . capitalize-dwim)
          ("C-h '" . describe-char)
          ("C-," . duplicate-dwim)
          ("C-z" . nil)                  ; Quite useless key for me
          ("C-z s" . profiler-start)
          ("C-z p" . profiler-stop)
-         ("C-z r" . profiler-report)
-         ;; ("C-c C-j" . recompile)
-         ;; ("C-c C-;" . compile)
-         )
+         ("C-z r" . profiler-report))
   :hook (emacs-lisp-mode . electric-pair-mode)
   :init
   ;; Configure backups. Put all of them in the separate directory.
@@ -77,38 +71,12 @@
   ;; Support opening new minibuffers from inside existing minibuffers.
   (setq enable-recursive-minibuffers t)
 
-  ;; Spaces > tabs.
-  ;; Use 4 spaces for tabs whenever possible.
-  ;; Remember that there's `untabify' command which helps you convert tabs to spaces.
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 4)
 
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete)
-
   ;; Delete selection on typing
-  (delete-selection-mode)
+  (delete-selection-mode +1)
 
-  ;; ;; Enable clipboard synchronization on wayland.
-  
-  ;; (when (= 0 (shell-command "wl-copy -v"))
-  ;;   ;; credit: yorickvP on Github
-  ;;   (setq wl-copy-process nil)
-  ;;   (defun wl-copy (text)
-  ;;     (setq wl-copy-process (make-process :name "wl-copy"
-  ;;                                         :buffer nil
-  ;;                                         :command '("wl-copy" "-f" "-n")
-  ;;                                         :connection-type 'pipe
-  ;;                                         :noquery t))
-  ;;     (process-send-string wl-copy-process text)
-  ;;     (process-send-eof wl-copy-process))
-  ;;   (defun wl-paste ()
-  ;;     (if (and wl-copy-process (process-live-p wl-copy-process))
-  ;;         nil     ; should return nil if we're the current paste owner
-  ;;       (shell-command-to-string "wl-paste -n | tr -d \r")))
-  ;;   (setq interprogram-cut-function 'wl-copy)
-  ;;   (setq interprogram-paste-function 'wl-paste))
   ;; Don't show the splash screen
   (setq inhibit-startup-message t)
 
@@ -240,20 +208,7 @@
   (setq view-read-only t)
 
   ;; This will allow to sentence jump functions to behave as expected.
-  (setq sentence-end-double-space nil)
-
-  ;; Enable smooth scrolling
-  ;; (unless (and (eq window-system 'mac)
-  ;;              (bound-and-true-p mac-carbon-version-string))
-  ;;   ;; Enables `pixel-scroll-precision-mode' on all operating systems and Emacs
-  ;;   ;; versions, except for emacs-mac.
-  ;;   ;;
-  ;;   ;; Enabling `pixel-scroll-precision-mode' is unnecessary with emacs-mac, as
-  ;;   ;; this version of Emacs natively supports smooth scrolling.
-  ;;   ;; https://bitbucket.org/mituharu/emacs-mac/commits/65c6c96f27afa446df6f9d8eff63f9cc012cc738
-  ;;   (setq pixel-scroll-precision-use-momentum nil) ; Precise/smoother scrolling
-  ;;   (pixel-scroll-precision-mode 1))
-  )
+  (setq sentence-end-double-space nil))
 
 ;; Newer version of transient package required for magit.
 ;; (use-package cond-let :ensure (:type git :host github :repo "tarsius/cond-let"))
@@ -327,11 +282,6 @@
   (setq xclip-mode t)
   (setq xclip-method 'wl-copy))
 
-(use-package term :ensure nil
-  :config
-  ;; Allow switching windows in ansi-term char mode
-  (define-key term-raw-map (kbd "M-o") 'other-window))
-
 (use-package multiple-cursors :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
@@ -339,61 +289,7 @@
          ("C-c C-<" . mc/mark-all-like-this)
          ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
-;; (use-package macrursors :ensure (:type git :host github :repo "corytertel/macrursors" :branch "main" :files ("*.el"))
-;;   :bind (("C-c SPC" . macrursors-select)
-;;          ("C->" . macrursors-mark-next-instance-of)
-;;          ("C-<" . macrursors-mark-previous-instance-of))
-;;   :config
-;;   (dolist (mode '(corfu-mode))
-;;     (add-hook 'macrursors-pre-finish-hook mode)
-;;     (add-hook 'macrursors-post-finish-hook mode)))
-
-(use-package expand-region :ensure t
-  :bind ("C-=" . er/expand-region))
-
 ;;; Completions and other general must-have stuff.
-
-;; Better completion for M-x
-(use-package vertico :ensure t
-  :init
-  (vertico-mode))
-
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :init
-  (savehist-mode))
-
-;; Fuzzy search for vertico
-(use-package orderless :ensure t
-  :init
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
-  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
-
-;; Useful annotations for vertico
-(use-package marginalia :ensure t
-  :init
-  (marginalia-mode))
-
-;; (defun corfu-enable-in-minibuffer ()
-;;   "Enable Corfu in the minibuffer."
-;;   (when (local-variable-p 'completion-at-point-functions)
-;;     ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
-;;     (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-;;                 corfu-popupinfo-delay nil)
-;;     (corfu-mode 1)))
-
-
-;; General in-place auto completion
-;; ;; If you want more context-related completions consider `cape' package
-;; (use-package corfu :ensure t
-;;   :hook (minibuffer-setup-hook . corfu-enable-in-minibuffer)
-;;   :custom (corfu-auto t)
-;;   :init
-;;   (global-corfu-mode))
 
 ;; Use emacs 30.1 completion-preview-mode instead
 (use-package completion-preview
@@ -528,6 +424,7 @@
          ("C-h x" . helpful-command)
          ("C-h ." . helpful-at-point)))
 
+;;; TODO: Make something more sane.
 (use-package treesit
   :config
   (setq treesit-language-source-alist
@@ -560,9 +457,6 @@
   )
 
 ;;; More opinionated packages
-(use-package rainbow-delimiters :ensure t
-  :hook prog-mode)
-
 ;; Snippets!
 (use-package tempel :ensure t
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
@@ -597,25 +491,6 @@
 (use-package modus-themes :ensure t :disabled
   ;; :config
   ;; (load-theme 'modus-vivendi t)
-  )
-
-;; (use-package tao-theme :ensure t
-;;   ;; :config
-;;   ;; (fringe-mode 0)
-;;   ;; (load-theme 'tao-yin t)
-;;   )
-
-(use-package stimmung-themes
-  :disabled
-  :ensure t :demand t
-  :bind ("C-c t t" . stimmung-themes-toggle)
-  :config
-  (stimmung-themes-load-light))
-
-(use-package gruvbox-theme
-  :ensure t :demand t
-  :config
-  ;; (load-theme 'gruvbox-light-soft t)
   )
 
 ;; Trim unnecessary whitespace.
@@ -654,9 +529,6 @@
 
   ;; For `eat-eshell-visual-command-mode'.
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
-
-(use-package vterm
-  :ensure t)
 
 (use-package laas :ensure t
   :hook (LaTeX-mode org-mode)
@@ -706,35 +578,6 @@
 (use-package abbrev
   :hook (org-mode))
 
-;; (use-package org-modern :ensure t
-;;   :disabled t
-;;   :init
-;;   (setq
-;;    ;; Edit settings
-;;    org-auto-align-tags t
-;;    org-tags-column 0
-;;    org-catch-invisible-edits 'show-and-error
-;;    org-special-ctrl-a/e t
-;;    org-insert-heading-respect-content t
-
-;;    ;; Org styling, hide markup etc.
-;;    org-hide-emphasis-markers t
-;;    org-agenda-tags-column 0
-;;    org-ellipsis "…")
-;;   ;; TODO: https://github.com/jdtsmith/org-modern-indent
-;;   (global-org-modern-mode))
-
-(use-package org-pomodoro
-  :ensure t
-  :config
-  (add-hook 'org-pomodoro-break-finished-hook
-            (lambda ()
-              (interactive)
-              (point-to-register 1)
-              (org-clock-goto)
-              (org-pomodoro '(25))
-              (register-to-point 1))))
-
 (use-package vundo :ensure t
   :bind ("C-z v" . vundo))
 
@@ -742,14 +585,7 @@
   :after embark
   :hook (org-mode)
   :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages))
-  :config
-  (embark-define-overlay-target jinx category (eq %p 'jinx-overlay))
-  (add-to-list 'embark-target-finders 'embark-target-jinx-at-point)
-  (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
-  (add-to-list 'embark-repeat-actions #'jinx-next)
-  (add-to-list 'embark-repeat-actions #'jinx-previous)
-  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
+         ("C-M-$" . jinx-languages)))
 
 (defun denote-quick (&optional arg)
   "Wrapper around `denote' that changes prompts based on prefix ARG.
@@ -773,7 +609,7 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (interactive)
   (consult-ripgrep denote-directory))
 
-(use-package denote
+(use-package denote :disabled
   :ensure t
   :hook
   ( ;; If you use Markdown or plain text files, then you want to make
@@ -840,27 +676,6 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
     (funcall f proc (xterm-color-filter string)))
   (advice-add 'compilation-filter :around #'my/advice-compilation-filter))
 
-
-
-;; (use-package ansi-color
-;;   :ensure nil
-;;   :hook (compilation-filter . ansi-color-compilation-filter))
-
-;; (use-package fancy-compilation
-;;   :ensure t
-;;   :commands (fancy-compilation-mode)
-;;   :config
-;;   (with-eval-after-load 'compile
-;;     (fancy-compilation-mode)))
-
-(use-package toml-ts-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode)))
-
-(use-package nov :ensure t
-  :init
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
-
 (use-package pdf-tools :ensure t :demand t
   :hook ((pdf-view-mode . auto-revert-mode)
          (pdf-view-mode . pdf-view-themed-minor-mode))
@@ -875,23 +690,10 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (push 'embark--allow-edit
       (alist-get 'eglot-rename embark-target-injection-hooks)))
 
-(use-package flycheck :ensure t
-  :disabled
-  :config
-  (define-key flycheck-mode-map (kbd "M-n") 'flycheck-next-error)
-  (define-key flycheck-mode-map (kbd "M-p") 'flycheck-previous-error))
-
 (use-package flymake
   :config
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
-
-(use-package eglot-booster :ensure (:type git :host github :repo "jdtsmith/eglot-booster" :files (:defaults "*.el"))
-  :disabled t
-  :after eglot
-  :config (eglot-booster-mode))
-
-(use-package command-log-mode :ensure t)
 
 (use-package dape :ensure t
   :config
@@ -901,13 +703,9 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :custom
   (repeat-mode +1))
 
-(use-package direnv :ensure t
-  :disabled
-  :config
-  (direnv-mode))
-
 ;;; Language-specific packages
 (use-package typst-ts-mode
+  :disabled
   :ensure (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el"))
   :hook ((typst-ts-mode . electric-pair-mode)
          (typst-ts-mode . smerge-mode))
@@ -920,16 +718,8 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
 (use-package rustic :ensure t
   :config
   (setq rustic-lsp-client 'eglot
-        rustic-format-on-save t
+        ;; rustic-format-on-save t
         rustic-format-display-method 'ignore))
-
-;; (use-package go-ts-mode
-;;   :init
-;;   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-;;   (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode)))
-
-;; (use-package pu-mode
-;;   :ensure (:type git :host github :repo "remimimimimi/pu.el" :branch "main" :files ("pu-mode.el")))
 
 (use-package cmake-mode :ensure t)
 
@@ -937,23 +727,11 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   :ensure (:type git :host github :repo "bustercopley/lean4-mode" :branch "eglot" :files ("*.el" "data"))
   :custom (lean4-keybinding-refresh-file-dependencies (kbd "C-c d")))
 
-(use-package paredit :ensure t
-  :hook emacs-lisp-mode)
-
-(use-package macrostep :ensure t :demand t
-  :bind ("C-c e" . macrostep-expand))
-
-(use-package julia-snail
-  :ensure t
-  :custom
-  (julia-snail-terminal-type :eat)
-  :hook
-  (julia-mode . julia-snail-mode))
+(use-package macrostep :ensure t
+  :bind ( :map emacs-lisp-mode-map
+          ("C-c e" . macrostep-expand)))
 
 (use-package glsl-mode
-  :ensure t)
-
-(use-package racket-mode
   :ensure t)
 
 (use-package c-mode :ensure nil
@@ -982,20 +760,15 @@ If ARG ≥ 16, prompt for both TITLE and TAGS."
   (add-hook 'odin-ts-mode-hook #'use-tabs-instead-of-spaces)
   (add-hook 'odin-ts-mode-hook #'eglot-ensure))          ; Only highlight what's needed.
 
+(use-package zig-mode
+  :ensure t)
+
 (use-package forth-mode
   :ensure t)
 
 (use-package smart-tabs-mode :ensure t
   :config
   (smart-tabs-advice js-indent-line js-indent-level))
-
-;; (use-package proof-general
-;;   :ensure t
-;;   :demand t
-;;   :config
-;;   ;; (push '(narya "Narya" "ny" nil (".nyo")) proof-assistant-table)
-;;   (push 'narya proof-general-configured-provers)
-;;   (require 'narya))
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
